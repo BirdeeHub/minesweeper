@@ -13,7 +13,7 @@ This version exists so I can change random stuff without messing with someones l
 
 Its just main, but without most of the comments from the tutorial, 
 
-and some small changes, such as having the fixed version of toggleDarkMode, and also ScoresFileIO as an actual static class and not a fake one.
+and some small changes, such as having ScoresFileIO as an actual static class and not a fake one
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 |                                                     |                                                     |

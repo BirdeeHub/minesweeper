@@ -98,8 +98,7 @@ public class MainGameWindow extends javax.swing.JFrame {//Originally grid and ma
     public MainGameWindow(int w, int h, int bombNum, int lives) {
         Fieldx = w;
         Fieldy = h;
-        this.lives = lives;//<-- "this.something" allows us to refer to 'something' belonging to 'this' instance of the class
-                                                //which is useful because we already have a lives that got passed in by the constructor
+        this.lives = lives;
         bombCount = bombNum;
         grid = new Grid(Fieldx, Fieldy, bombCount, lives);//<-- **Generate game board**
         displayTimer.scheduleAtFixedRate(timeDisplayTask, 0, 50);//<-- this just displays the time in Minefield answers. This rate is higher than the one in minefield so you dont tilt players
@@ -114,14 +113,13 @@ public class MainGameWindow extends javax.swing.JFrame {//Originally grid and ma
             public void mouseEntered(MouseEvent e){//<-- this allows the 1.5 click trick by actually getting the component the mouse is over rather than just
                 currentButton=(JButton)e.getSource();// getting the component that fired the mousePressed and released actions which will always be the same
             }//     ^ this is because each Adapter is associated with a particular button, and contains both methods, so if one fires, then the release for that one will be the one that runs.
-            
-            @Override                                  //dont worry too much if this listener is confusing for now.
-            public void mousePressed(MouseEvent e) {//<-- you need to know that they can fire on things like mouse pressed
-                if(SwingUtilities.isLeftMouseButton(e)){// and how to search for how to write an event listener for a mouse or a key or whatever in a language
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if(SwingUtilities.isLeftMouseButton(e)){
                     LMB = true;//<-- set our left mouse button variable true so that all the buttons can hear if the mouse was pressed
                     if(currentButton!=null){//<-- if mouse is over a button
                         if(chordToggle.isSelected()){//<-- if the toggle button for chords is selected
-                            grid.doClickType(currentButton, 2);//<-- in this case, we run grid.doClickType 2 (a chord)
+                            grid.doClickType(currentButton, 2);
                         }else if(markToggle.isSelected()){//<-- if the toggle button for marking is selected
                             grid.doClickType(currentButton, 1);//mark
                         }else if(RMB){//was the right mouse button also pressed?
@@ -145,7 +143,6 @@ public class MainGameWindow extends javax.swing.JFrame {//Originally grid and ma
                 setLivesLostDisplay();//doing this after clicking a cell made most sense.
                 setGameOverDisplay();
             }
-
             @Override //<-- mouseAdapter already had a default for these. But we want to write them instead to do our game stuff so we override
             public void mouseReleased(MouseEvent e) {//<-- not holding the mouse anymore
                 if(SwingUtilities.isLeftMouseButton(e)){
@@ -346,7 +343,5 @@ public class MainGameWindow extends javax.swing.JFrame {//Originally grid and ma
         chordToggle.addKeyListener(keyAdapter);
 
         getContentPane().setVisible(true);//<-- let there be light!
-
-        //Cool! We have a functioning window to display our game! Now it is time to read Grid up through the constructor and see whats going on there!
     }
 }

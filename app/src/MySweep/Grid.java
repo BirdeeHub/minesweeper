@@ -39,7 +39,8 @@ public class Grid extends JPanel {
     private static final Color BORDERRED = new Color(255,0,0);//<-- higher
     private static final Color defaultBorderColor = new Color(126, 126, 126);//<-- default border color
     private static final Insets CellInset = new Insets(-20, -20, -20, -20);//<-- leave this alone unless you want dots instead of numbers. It sets text margins
-
+    private static final ScalableIcon GOEXPLODEICON = new ScalableIcon(MineSweeper.ExplosionIcon);
+    private static final ScalableIcon GOREVEALEDICON = new ScalableIcon(MineSweeper.MineIcon);
     //-------------logic initializing-----------------------------logic initializing--------------logic initializing---------------------------------logic initializing-----
     private final int Fieldx, Fieldy, bombCount, lives;//<-- the size of board and how many bombs and lives
 
@@ -79,7 +80,6 @@ public class Grid extends JPanel {
         }
         public int getXcoord(){return x;}//<-- these functions get the x and y
         public int getYcoord(){return y;}
-        //Jbutton had a paintBorder function but I did not like it. So I override it.
         @Override
         protected void paintBorder(Graphics g) {//<-- override paintBorder so that I can change border color and thickness
             if(borderColor!=null){
@@ -91,7 +91,7 @@ public class Grid extends JPanel {
                     g.drawRect(i, i, getWidth() - i*2 - 1, getHeight() - i*2 -1);//<-- like draw rectangles of 1 pixel width
                 }//in a loop because 1 pixel width, so i need many.
             }
-        }//(dont worry about protected. It means it can only be seen within the package. paintBorder is originally defined that way.)
+        }
     }
     private static class ScalableIcon implements Icon {//<-- implement the Icon interface, which contains 3 functions for us to implement.
         private ImageIcon originalIcon;//<-- getting original icon for sizing purposes
@@ -227,7 +227,6 @@ public class Grid extends JPanel {
         gridSizesOldNew[3] = (newCellSize.height*Fieldy);
         return gridSizesOldNew;
     }
-
     boolean isDarkMode(){return DarkMode;}//<-- this is a function to get if dark mode is on
     void toggleDarkMode(){
         this.DarkMode = !DarkMode;
@@ -243,8 +242,8 @@ public class Grid extends JPanel {
                         getButtonAt(x,y).setForeground((DarkMode)?DarkModeTextColor:LightModeTextColor);
                     }
                     if(answers.isBomb(x, y)&&answers.isGameOver()){
-                        if(wonValue == 0)getButtonAt(x,y).setIcon(new ScalableIcon(MineSweeper.ExplosionIcon));
-                        if(wonValue == 1)getButtonAt(x,y).setIcon(new ScalableIcon(MineSweeper.MineIcon));
+                        if(wonValue == 0)getButtonAt(x,y).setIcon(GOEXPLODEICON);
+                        if(wonValue == 1)getButtonAt(x,y).setIcon(GOREVEALEDICON);
                     }
                 }
             }
@@ -489,8 +488,6 @@ public class Grid extends JPanel {
     }
     //---------------------------------------GameOver()-----------------------------------------------------------------------------------------
     private void GameOver(boolean won) {//reveals bombs on board with icon and border and stuff then passes the work to ScoresFileIO
-        ScalableIcon EXPiconAutoScaled = new ScalableIcon(MineSweeper.ExplosionIcon);
-        ScalableIcon RVLiconAutoScaled = new ScalableIcon(MineSweeper.MineIcon);
         for (int i = 0; i < Fieldx; i++) {//            reveal bombs on board
             for (int j = 0; j < Fieldy; j++) {
                 if (answers.isBomb(i, j) && !answers.exploded(i, j)) {//<-- if it should be revealed
@@ -499,14 +496,14 @@ public class Grid extends JPanel {
                             getButtonAt(i,j).setDynamicBorderWidth(false);
                             getButtonAt(i,j).setBorderColor(GREEN, 2);
                         }else{getButtonAt(i,j).setText("");}
-                        getButtonAt(i,j).setIcon(EXPiconAutoScaled);
+                        getButtonAt(i,j).setIcon(GOEXPLODEICON);
                         getButtonAt(i,j).revalidate();
                     }else{//<-- or did you find them?
                         if(!answers.marked(i,j)){
                             getButtonAt(i,j).setDynamicBorderWidth(false);
                             getButtonAt(i,j).setBorderColor(MAGENTA, 2);
                         }else{getButtonAt(i,j).setText("");}
-                        getButtonAt(i,j).setIcon(RVLiconAutoScaled);
+                        getButtonAt(i,j).setIcon(GOREVEALEDICON);
                         getButtonAt(i,j).revalidate();
                     }
                     getButtonAt(i,j).setText("");//<-- any remove text from the button
