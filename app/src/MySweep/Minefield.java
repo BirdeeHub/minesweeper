@@ -150,7 +150,4 @@ class Minefield{//a data class for Grid. contains and manages all mutable game-s
         }
     }
     boolean isGameOver(){return GameOver;}
-
-    //if all of this makes sense, go back to grid, and read the stuff after constructor. 
-    //it has some misc display functions, and then the main game logic that uses this class to check values and do stuff..
 }

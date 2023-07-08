@@ -9,47 +9,13 @@ Mostly I just wanted to learn some Java.
 
 ----------------------------------------------------------------------------------------------------------------------------------------------------
 
-You can learn too! Source code is included with the installer, as well as a compile script, 
-which will update your actual installed version of the game that you can run from your start menu.
+This version exists so I can change random stuff without messing with someones learn-to-code experience. 
 
-It has a lot more than that actually. It has a full learn to code java guide inside the source code.
+Its just main, but without most of the comments from the tutorial, 
 
-Yes. Inside the source code. This entire game is a learn to code guide.
-
-It begins with HowToCodeJava.txt, and then you walk along the program in a particular (but not too convoluted) order.
-
-You will probably want to download some sort of code editor so that the code is color coded. A suggestion is in HowToCodeJava.txt, suggested for its ease of install.
-
-It has comments along the way and introduces concepts in a gradually increasing order of difficulty. (or, as close to that as possible while still being a game!!)
-
-And it ends with a coding excercise that should hopefully be within grasp once you make it to the end, where you fix a slight bug. (with hints!) 
-
-(Bug does not affect gameplay. But it was a real bug. I made it. On accident. Yes there is a link to solutions... try not to use it.)
-
-It should be challenging, but definitely not impossible, even if you have no previous knowledge of coding. You will need to pay close attention.
-
-(Dont forget to reference back to the opening text file where I explain what you don't understand yet as it gets reintroduced during the code!)
-
-Of course, at a certain point you have to DO, rather than read. But this will get you to that point.
-
-Go to the install folder of your game, and read the README in app/ or lib/app for more info.
-
-Don't clone the repo it just has extra stuff. Download an installer, (or just the .jar file in app folder and extract it. Instructions below.)
-
-Inside is an entire copy of the app folder of this repo.
+and some small changes, such as having the fixed version of toggleDarkMode, and also ScoresFileIO as an actual static class and not a fake one.
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
-
-**version 1.0** is the normal version for those who just want a good minesweeper game.
-
-**version 2.0** contains a compiler you can use, but is an extra 10MB. Recommended for learners, because you can jump in with no extra steps!
-
-if you have 1.0 you will need a version of Java Development Kit to recompile if you wish to edit.
-
-including the compiler on linux made it over 100MB for some reason so I couldnt add an installer with an included compiler.
-
-regardless of version, you will need a JDK to make your own installer.
-
 |                                                     |                                                     |
 |-----------------------------------------------------|-----------------------------------------------------|
 | ![Screenshot](./Screenshots/Screenshot.png)         | ![Screenshot](./Screenshots/WinScreenshot.png)      |
@@ -94,20 +60,6 @@ Use the script and not the .deb file to install to add to path and make it backg
 otherwise some package launchers like dmenu (the default on i3) cant find it.
 
 It would work fine though if you used the .deb other than being less convenient to use it from the command line
-
-If you are planning to learn Java rather than just play, you will unfortunately have to copy your game from its install folder to a directory that doesnt require sudo.
-
-So in that case, use the .deb file. It wont get added to your path, but you will also be able to see error messages because it wont be running from a script that hides those.
-
-dpkg has certain install locations it allows....
-
-**If you are learning java, download the .deb file (or the .jar) for the reasons stated above.** 
-```bash
-wget -O minesweeper_1.0-1_amd64.deb https://github.com/BirdeeHub/minesweeper/raw/main/minesweeper_1.0-1_amd64.deb && \
-sudo dpkg -i ./minesweeper_1.0-1_amd64.deb
-```
-
-**Otherwise, better playing experience from command line launch:**
 
 move to a writeable directory and run the following command (requires wget):
 ```bash

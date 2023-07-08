@@ -19,10 +19,6 @@ import java.awt.event.KeyAdapter;
 
 
 public class OpeningWindow extends JFrame {//<-- its a JFrame
-    //start off by initializing our variables that will be accessible anywhere within the class 
-    //but not outside because they are private!
-    //with a public variable, we can say "instanceOfAClass.thePublicVariable" 
-    //but with private ones we cannot.
     private JTextField WidthField;//<-- user text (strings) goes into these.
     private JTextField HeightField;//<-- we create the actual instances to go in these in the constructor
     private JTextField BombNumber;
@@ -37,26 +33,22 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
     private JLabel TitleLabel = new JLabel();
     private JLabel AuthorLabel = new JLabel();
     //-----------------------------------------Constructors----------------------------------------------------------
-    //notice a constructor just looks like a function, but it has the same name as the class
-    public OpeningWindow(String initialx, String initialy, String initialbombno, String initiallives) {//<-- called when you have 4 strings as arguments
+    public OpeningWindow(String initialx, String initialy, String initialbombno, String initiallives) {
         WidthField = new JTextField(initialx);
         HeightField = new JTextField(initialy);//<-- when you use the JTextField constructor with a string as an argument,
         BombNumber = new JTextField(initialbombno);             //it prepopulates the field with that string
         LivesNumber = new JTextField(initiallives);
         initComponents();//<-- sets up our window components
     }
-    //A Constructor also has no return type (because it always is used with new to return an instance of this class.)
-    public OpeningWindow() {//<-- called when you use no arguments
+    public OpeningWindow() {
         WidthField = new JTextField();
         HeightField = new JTextField();//<-- initialize them without pre populated text instead
         BombNumber = new JTextField();
         LivesNumber = new JTextField();
         initComponents();
-    }//--------------------------------and then our functions!---------------------------------------------------------------------------
-
+    }
     //-------------------------------------------------Start Action Performed---called by action listener on start button-------------------
     private void StartActionPerformed() {//this function runs MainGameWindow, performs error checking and displays errors
-        //this next part is like in MineSweeper class
         try{
             int width =(int)(Integer.parseInt(WidthField.getText()));//(int) makes sure it is read as an integer. This is called a cast.
             int height =(int)(Integer.parseInt(HeightField.getText()));//Integer.parseInt(String) converts strings to integers
@@ -70,26 +62,16 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
                 if(bombCount<0)BombFieldLabel.setText("Bombs<0");//notice the if statement at the start of each.
                 return;//<-- return early, ending execution of the function, because input was bad.
             }
-            EventQueue.invokeLater(new Runnable() {//<-- if you got here, you passed the checks.
-                public void run() {
-                    new MainGameWindow(width,height,bombCount,lives).setVisible(true);//<-- start the game!
-                }
+            EventQueue.invokeLater(new Runnable() {
+                public void run() {new MainGameWindow(width,height,bombCount,lives).setVisible(true);}
             });
             OpeningWindow.this.dispose();//<-- we dispose windows unless we want to close the whole program.
         }catch(NumberFormatException e){
             TitleLabel.setText("Invalid field(s)");//<-- if an error, tell the user their input was too stringy
         }
     } 
-    
-    //Yeah but where is the stuff located and what does it look like though? I thought this was a window? Or, a JFrame, or whatever?
     //---------------------------------initComponents()-----called by constructor-----------------------------------------------------------------
     private void initComponents() {//<-- a private function that doesnt return anything. It does stuff though.
-
-        this.setIconImage(MineSweeper.MineIcon);//<-- see how easy it is to reference our public static variable from MineSweeper?
-        //^ here we set that little icon in the top left corner
-        //"this.something" allows us to refer to 'something' belonging to 'this' instance of the class
-        //in this case, 'something' is a function called setIconImage() belonging to the class named OpeningWindow, which is a JFrame
-
         //--------------------------------------add action Listeners to components
         Start.addActionListener(new ActionListener() {//<-- our start button was clicked?
             public void actionPerformed(ActionEvent evt) {
@@ -123,20 +105,15 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
             }
         });//<-- 2 of them!
         KeyAdapter keyAdapter = new KeyAdapter() {//this one is not defined as an anonymous class. It is called keyAdapter and it is a KeyAdapter.
-            public void keyPressed(KeyEvent evt) {//It is a listener though. and an interface.
-                // Check if the Enter key is pressed
+            public void keyPressed(KeyEvent evt) {
                 if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
-                    // get focused component source
                     Component CurrComp = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-                    if(!(CurrComp instanceof JButton)){//<-- instanceof tells us if a variable is an instance of a certain class (it returns null if nothing is assigned to the variable)
-                                      //^this comparison makes it so that enter on a field starts the game too
+                    if(!(CurrComp instanceof JButton)){
                         StartActionPerformed();//<-- and here is where we say to start the start if it was a text field
-                    }else {               //else,
-                        ((JButton)CurrComp).doClick();//<-- doClick() does exactly what it sounds like
-                    }
+                    }else ((JButton)CurrComp).doClick();
                 }//It gives us enter key functionality!
             }    //the tab focusable component property is on by default unless you turn it off in Swing.
-        };       //so we just need to process the enter button action.
+        };
         Start.addKeyListener(keyAdapter);
         ScoreBoard.addKeyListener(keyAdapter);//<-- if you dont add listeners directly (anonymously) 
         WidthField.addKeyListener(keyAdapter);//<-you have to add them to the components you want later like this
@@ -167,19 +144,13 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
         AuthorLabel.setFont(new Font("Tahoma", 0, 12));
         AuthorLabel.setText("-Birdee");
         AuthorLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        setIconImage(MineSweeper.MineIcon);
 
         //--------------------------now to add our stuff to our content pane----------------
-
-        //Layout Managing:
-        //layout managers allow you to tell the program where to put the stuff without specifying actual pixels.
-        //this greatly simplifies making stuff be the right size in the right places on different screens and window sizes
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setPreferredSize(new Dimension(300, 200));
         getContentPane().setLayout(new GridBagLayout());//<-- add the layout manager
         GridBagConstraints containerConstraints = new GridBagConstraints();//<-- you modify this, and add a thing to the pane with it
-                //when you do that, it imbues that thing with its position and size attributes. You then modify it and do it again with a new thing
-                //after you add the thing, you can change the constraints object without affecting how you set the previous thing
-        //Thats how this layout manager works. There are others. Like grid. Which is a regular grid. This is a grid bag. Bags are more flexible than grids
 
         containerConstraints.gridx =2;//set some values for x and y and whatever of the constraints
         containerConstraints.gridy =0;
@@ -275,7 +246,4 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
         pack();//<-- this pack(); causes it to evaluate sizes and paint the contents of the pane
         getContentPane().setVisible(true);//<-- then this displays the pane
     }
-    //Made it to the end?
-    
-    //Now time for main game window!
 }

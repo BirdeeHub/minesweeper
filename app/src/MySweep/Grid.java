@@ -19,27 +19,26 @@ import java.awt.Graphics2D;
 import javax.swing.ImageIcon;
 
 //This class controls the behavior of the game board. Contains cell display and action logic, and uses Minefield to keep track of the game state
-//read up through the end of the constructor and then go to Minefield before finishing.
 public class Grid extends JPanel {
     //--------------Initialize-Colors--------Many are the same color, but now theyre easily changed?
-    private final Icon DefaultButtonIcon = (new JButton()).getIcon();//<-- used for non darkmode
-    private final Color LightModeTextColor = new Color(0);//<-- LightMode button foreground (the color of the text)
-    private final Color DarkModeTextColor = new Color(255, 255, 255);//<-- DarkMode button foreground (the color of the text)
-    private final Color BLACK = new Color(0);//<-- default button background color in dark mode
-    private final Color GRASS = new Color(31, 133, 28);//<-- grass
-    private final Color MAGENTA = new Color(255,0,255);//<-- unmarked status color on win
-    private final Color GREEN = new Color(0,255,0);//<-- marked status color on loss
-    private final Color RED = new Color(255,0,0);//<-- in game exploded bomb background
-    private final Color ChGO_RED = new Color(255,0,0);//<-- game over indicator on chord number foreground
-    private final Color CYAN = new Color(0,255,200);//<-- exploded bomb foreground
-    private final Color QSTNMARKCOLOR = new Color(133, 95, 227);//<-- question mark color
-    private final Color MARKCOLOR = new Color(255,0,0);//<-- color of marks
-    private final Color BORDERYELLOW = new Color(255, 255, 0);//<-- border colors 2 bombs
-    private final Color BORDERORANGE = new Color(255, 160, 0);//<-- 3
-    private final Color BORDERORANGERED = new Color(255,95,0);//<-- 4
-    private final Color BORDERRED = new Color(255,0,0);//<-- higher
-    private final Color defaultBorderColor = new Color(126, 126, 126);//<-- default border color
-    private final Insets CellInset = new Insets(-20, -20, -20, -20);//<-- leave this alone unless you want dots instead of numbers. It sets text margins
+    private static final Icon DefaultButtonIcon = (new JButton()).getIcon();//<-- used for non darkmode
+    private static final Color LightModeTextColor = new Color(0);//<-- LightMode button foreground (the color of the text)
+    private static final Color DarkModeTextColor = new Color(255, 255, 255);//<-- DarkMode button foreground (the color of the text)
+    private static final Color BLACK = new Color(0);//<-- default button background color in dark mode
+    private static final Color GRASS = new Color(31, 133, 28);//<-- grass
+    private static final Color MAGENTA = new Color(255,0,255);//<-- unmarked status color on win
+    private static final Color GREEN = new Color(0,255,0);//<-- marked status color on loss
+    private static final Color RED = new Color(255,0,0);//<-- in game exploded bomb background
+    private static final Color ChGO_RED = new Color(255,0,0);//<-- game over indicator on chord number foreground
+    private static final Color CYAN = new Color(0,255,200);//<-- exploded bomb foreground
+    private static final Color QSTNMARKCOLOR = new Color(133, 95, 227);//<-- question mark color
+    private static final Color MARKCOLOR = new Color(255,0,0);//<-- color of marks
+    private static final Color BORDERYELLOW = new Color(255, 255, 0);//<-- border colors 2 bombs
+    private static final Color BORDERORANGE = new Color(255, 160, 0);//<-- 3
+    private static final Color BORDERORANGERED = new Color(255,95,0);//<-- 4
+    private static final Color BORDERRED = new Color(255,0,0);//<-- higher
+    private static final Color defaultBorderColor = new Color(126, 126, 126);//<-- default border color
+    private static final Insets CellInset = new Insets(-20, -20, -20, -20);//<-- leave this alone unless you want dots instead of numbers. It sets text margins
 
     //-------------logic initializing-----------------------------logic initializing--------------logic initializing---------------------------------logic initializing-----
     private final int Fieldx, Fieldy, bombCount, lives;//<-- the size of board and how many bombs and lives
@@ -54,8 +53,6 @@ public class Grid extends JPanel {
     private boolean DarkMode = true;//<-- starts in DarkMode by default.(toggle button in help window. making this false would change the default setting)
     private boolean cancelQuestionMarks = true;//<-- boolean for toggling ? marks on bombs
 
-    //--------------------------you can initialize other classes within classes if required.--------------------------------------------------------
-    //----this one is private. Things outside of grid just think it is a JButton.(because it extends JButton) But here, we know.--------------------------
     //--------------------------CellButton();-----------------------------------------CellButton();-------------------------------------------------
     private class CellButton extends JButton {//<-- these are our game board buttons. This class was created to allow the 
         private int borderWeight = 1;         //^setting of color and thickness of cell borders, now it knows where it is.
@@ -96,6 +93,24 @@ public class Grid extends JPanel {
             }
         }//(dont worry about protected. It means it can only be seen within the package. paintBorder is originally defined that way.)
     }
+    private static class ScalableIcon implements Icon {//<-- implement the Icon interface, which contains 3 functions for us to implement.
+        private ImageIcon originalIcon;//<-- getting original icon for sizing purposes
+        public ScalableIcon(Image originalImage) {//<-- Constructor 
+            this.originalIcon = new ImageIcon(originalImage);//<-- create an ImageIcon out of the icon. It is not easy to get the height of the Image class.
+        }
+        public int getIconWidth() {return 0;}//<-- it only matters that these are smaller than the buttons. If it isnt, the button will get bigger.
+        public int getIconHeight() {return 0;}//<-- We are implementing an interface. Other java classes use these functions. One of those, is JButton.
+        public void paintIcon(Component c, Graphics g, int x, int y) {//<-- This will then make the icon the size of the button after.
+            int width = c.getWidth();
+            int height = c.getHeight();
+            Graphics2D g2d = (Graphics2D) g.create();//<-- i hate these because i have to look for stuff like
+            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);//<-- RenderingHints
+            AffineTransform transform = new AffineTransform();//<-- or the stretch but with matricies that I couldnt remember the name of
+            transform.scale((double) width / originalIcon.getIconWidth(), (double) height / originalIcon.getIconHeight());
+            g2d.drawImage(originalIcon.getImage(), transform, null);
+            g2d.dispose();
+        }
+    }
     //-----------------------------------------------------------------------------------------------------------------------------------------------------
     //---------------------GRID CONSTRUCTOR----------------------GRID CONSTRUCTOR----------------------------GRID CONSTRUCTOR------------------------------
     public Grid(int w, int h, int bombNum, int lives) {//INIT
@@ -119,12 +134,7 @@ public class Grid extends JPanel {
             }//at the end 0,0 will be in the top left. like the first word on a page. doesnt matter to us though. we just need to know that its a grid and the x and y
         }
         if(DarkMode)for(int i = 0; i < Fieldx; i++)for(int j = 0; j < Fieldy; j++)getButtonAt(i,j).setBackground(BLACK);//<-- i do this more than i should... You are able to leave brackets off of things like if statements and loops if its just 1 function call.
-    }                                                                                           //^(its the same 2 for loops just on one line) im sorryyyy! Im also not though. You will need to be able to see it both ways. 
-    //-------------------------------------------END OF CONSTRUCTOR-------------------------------------------
-    
-    //-------------------------------------------Go to MineField.java, then come back here.--------------------------------------------------------
-    
-    //--------------------getButtonAt(int x, int y) Became necessary after getting rid of 2d array to reference cells by location-------------------------
+    }//--------------------getButtonAt(int x, int y) Became necessary after getting rid of 2d array to reference cells by location-------------------------
     private CellButton getButtonAt(int x, int y) {//<-- all you need to know about this right now is that it gets button at x, y
         return (CellButton) Grid.this.getComponent(y * Fieldx + x); //<-- this works because of integer division. Explained in fillZeroes.
     }                                                           //read on. when you get there and read it, this will make sense.
@@ -201,15 +211,6 @@ public class Grid extends JPanel {
             getButtonAt(x,y).setFont(newFont);
         }
     }
-
-
-
-
-
-
-    //----------------you should skip these next 3 functions for now.-----------------------------------------------------
-
-//            ZOOM FUNCTION
     //this is called from the zoom listener in main game window
     int[] doZoom(int rotation, int mouseX1, int mouseY1){//<-- it makes the cells bigger. The main window is in a scroll pane. does not set font
         Dimension currentCellSize = Grid.this.getComponent(0).getSize();//get the first buttons size (theyre all the same)
@@ -228,112 +229,28 @@ public class Grid extends JPanel {
     }
 
     boolean isDarkMode(){return DarkMode;}//<-- this is a function to get if dark mode is on
-
-
-
-/* 
-    Excercise for end of guide:
-
-    This next function is kinda glitchy if you use it in the end of game screen. 
-    But it doesnt affect gameplay because reset will fix it.
-    You could probably fix this by the end of reading these game files. It will be a little challenging though!
-    I have hints for you if you get stuck.
-    This can be part of the thing that makes coding frustrating sometimes, 
-    but it also will teach you a lot about how things are connected very quickly.
-    Dont worry if you cant figure it out.
-    I didn't actually figure it out until after I made it an excercise. 
-    I didnt even notice the bug until right before all these tutorial comments.
-    I dont like the non darkmode version. So I kinda just left it. It wasnt super important to me at the time.
-
-    It is definitely doable without advanced techniques though. 
-    Its even doable without googling if you were paying attention when you read this file!
-
-    NECESSARY HINTS: 
-
-    FIRST: Reproduce the bug.
-    open a game and click some bombs. when you explode, open instructions window.
-    pay attention to the explosions when you toggle the button. Some of them dissapear.
-    they also still have their old background colors.
-    it happens on the win screen as well for the same reason.
-
-    SECOND:
-    I apparently thought of checking all the bombs in the game over function instead of dealing with it here. Go remove that.
-    I'm rolling my eyes at myself. I legitimately thought that was a good idea.
-    It will make the error much more clear.
-    After that, you can fix it by changing only things inside this function.
-
-    If you are REALLY smart, you can do it in 3-5 lines plus some }'s (depending on if you like to put stuff on the same line or space it out)
-    If you aren't, and are like me, it might take you many more lines the first try.
-    there are MANY ways to do it, some are more elegant than others.
-    Both of my solutions are available but try to figure it out. You just read the whole thing. Use it or lose it! 
-    Using the hints below the function is fine. (try not to use the link though!)
-*/
-    void toggleDarkMode(){//<-- this toggles it for the board.
-        this.DarkMode = !DarkMode;//<-- toggle the variable for if darkmode
-        for (int x = 0; x < Fieldx; x++) {//<-- step through the x of grid so we can change for all columns.
-            for (int y = 0; y < Fieldy; y++) {//<-- step through each column so we can change for each button in the column
-
-                if(!(answers.exploded(x, y)||(answers.checked(x, y)&&answers.adjCount(x, y)==0))){//<- these are the 2 conditions in which I set background 
-                    //                                                                            ^during game so I check to prevent overwriting it
+    void toggleDarkMode(){
+        this.DarkMode = !DarkMode;
+        for (int x = 0; x < Fieldx; x++) {
+            for (int y = 0; y < Fieldy; y++) {
+                if(!(answers.exploded(x, y)||(answers.checked(x, y)&&answers.adjCount(x, y)==0))){
                     if(DarkMode){getButtonAt(x,y).setBackground(BLACK);
                     }else{
                         getButtonAt(x,y).setBackground(null);
-                        getButtonAt(x,y).setIcon(DefaultButtonIcon);//<-- the light mode background is an icon (you can put the other icon back over it)
+                        getButtonAt(x,y).setIcon(DefaultButtonIcon);
                     }
                     if(((DarkMode)?(getButtonAt(x,y).getForeground() == LightModeTextColor):(getButtonAt(x,y).getForeground() == DarkModeTextColor))){
                         getButtonAt(x,y).setForeground((DarkMode)?DarkModeTextColor:LightModeTextColor);
-                    }//^this if is to make sure it doesnt change the color of the game over ! marker when it happens on a chord because it will replace a number. 
-                    // ^it doesnt get caught by enclosing condition so this if basically says, only change text color if default color
+                    }
+                    if(answers.isBomb(x, y)&&answers.isGameOver()){
+                        if(wonValue == 0)getButtonAt(x,y).setIcon(new ScalableIcon(MineSweeper.ExplosionIcon));
+                        if(wonValue == 1)getButtonAt(x,y).setIcon(new ScalableIcon(MineSweeper.MineIcon));
+                    }
                 }
             }
         }
         Grid.this.repaint();
-        //after writing these comments out, I saw what I did wrong and what I could do instead. 
-        //If you figure it out, you paid good attention and did a good job.
     }
-    //HELPFUL HINTS:
-    //Think about what things in minefield you can check for and use, and when the bug is occurring and on what cells. 
-    //Also, a new icon will overwrite the old one so you have to then put the icon back on it. Check game over for how to do that.
-
-    //if you change too much and want to reference the original function that was here, its on the github at 
-    //https://github.com/BirdeeHub/minesweeper/blob/main/app/src/MySweep/Grid.java    <-- this link is totally fair game to use. Its just what was here before.
-
-
-
-
-    //SUPER HINTS: <-- these are still fine to use
-    //is bomb? is game over? all excellent things to think about, somehow missing from the above function. 
-    //You also know if you have won or lost yet and which it was.
-
-
-
-    //spoilers required? <-- This though, is only for if you are frustrated beyond belief.
-    //I added the answer to Jarred branch if you get really stuck. https://github.com/BirdeeHub/minesweeper/blob/Jarred/app/src/MySweep/Grid.java
-    //So there is a fixed version of this function there. A few different versions of it actually.
-
-    //That branch is kinda dumb in some ways but I wanted to preserve this excercise here and still have the answers somewhere. 
-    //Its dumb for the same reason it is cool actually.
-
-    //The cool thing about it is that the scores save inside the jar so if it is on a usb, it will still find your scores wherever you go.
-
-    //The dumb thing is, if it is in a directory it cannot write to, all it does is create a new jar in the temp directory of the machine and read from that.
-    //it will try to overwrite the old jar with the new jar on close but it will fail in that scenario.
-    //and linux dpkg can only install to directories you cannot write to without sudo..... 
-    //so this version is better for linux. For windows, you won't notice (although delete score will seem slower.).
-    //it also does not have a version with a compiler, and you couldnt use the one from this because Jarred requires the management module and java.exe to be present.
-//------------------------------------------------------------------------------------
-
-
-
-
-
-
-//---------------------START READING AGAIN HERE. Zoom Function and toggle DarkMode OVER--------------------------------------------------------------
-//---------------------START READING AGAIN HERE. Zoom Function and toggle DarkMode OVER--------------------------------------------------------------
-//---------------------START READING AGAIN HERE. Zoom Function and toggle DarkMode OVER--------------------------------------------------------------
-
-//This is honestly the most exciting section. Its where we do our actual click actions.
-
 //----GAME-LOGIC-BELOW--------GAME-LOGIC-BELOW--------GAME-LOGIC-BELOW--------GAME-LOGIC-BELOW--------GAME-LOGIC-BELOW-------GAME-LOGIC-BELOW----------
 //--------Click Handler--------------Click Handler--------------Click Handler--------------Click Handler--------------Click Handler------
     public void doClickType(JButton clickedButton, int clickType) {//<-- runs the correct click type. Called from listener
@@ -373,13 +290,11 @@ public class Grid extends JPanel {
                         BombsFound = answers.cellsMarked()+answers.cellsExploded();//<-- I mean, you found the bomb so....
                     }
                     livesLeft = lives-answers.cellsExploded();//<-- set the variable used for setting lives display because you lost one
-
                 } else if (answers.adjCount(xValue, yValue) != 0) {//*whew*.... close one. Clicked a number.
                     current.setText(String.valueOf(answers.adjCount(xValue, yValue)));
                     current.setForeground((DarkMode)?DarkModeTextColor:LightModeTextColor);
                     answers.check(xValue, yValue);
                     setBorderBasedOnAdj(xValue, yValue);
-
                 } else {                           //else you clicked a 0
                     boolean[][] prechekd=new boolean[Fieldx][Fieldy];//saving current checks so we know which ones fillzeroes flipped
                     for(int j=0;j<Fieldx;j++){
@@ -498,19 +413,11 @@ public class Grid extends JPanel {
     //------------------------------------------fillZeroes()-------------------------------------------------
     private void fillZeroes(int xValue, int yValue) {//-----------fillZeroes()------------------------------------------------------------------
         Stack<Integer> stack = new Stack<>();//<-- a stack must be used instead of recursion because large board sizes cause stack overflow.
-        //google recursion stack overflow java. 
-        //Now, to explain the thing used to get the button at a place:
-        stack.push(yValue * Fieldx + xValue);//<-- make single value out of x and y and put it on top of the stack
-        //i did it in this order y then x because thats the same as getButtonAt, which is the same as getComponent(position)
-        while (!stack.isEmpty()) {//<-- while we have a number on the stack
-            int position = stack.pop();//<-- take it off the stack and read its position number
-            int y = position / Fieldx;//<-- this is equivalent to y*Fieldx/Fieldx, which is equal to y
-            //                     ^this is because integer division drops stuff after decimal point so the remainder (which is xValue) is not included. 
-            int x = position % Fieldx;//<-- remainder==x   ...   and thats it. Integer division will ignore the thing you add.
-            //another thing to note about this is that x will always be the remainder because indexes start at 0, but length does not.
-            //length is the length and is 1 more than the highest index, so x will always be the remainder, because it is less than Fieldx
-            
-            //Now, for what we do with that while within this loop:
+        stack.push(yValue * Fieldx + xValue);
+        while (!stack.isEmpty()) {
+            int position = stack.pop();
+            int y = position / Fieldx;//<-- y*Fieldx/Fieldx
+            int x = position % Fieldx;//<-- remainder==x
             if (!answers.checked(x, y)) {//<-- since this will unfortunately branch and call multiple times per 0 cell because it checks all neighbors each time
                 answers.check(x, y);//<--check this button                    ^^^make sure we dont re-call our loops on already checked squares
                 ((CellButton)Grid.this.getComponent(position)).setText(String.valueOf(answers.adjCount(x, y)));//<--set these things direct from position 
@@ -582,14 +489,10 @@ public class Grid extends JPanel {
     }
     //---------------------------------------GameOver()-----------------------------------------------------------------------------------------
     private void GameOver(boolean won) {//reveals bombs on board with icon and border and stuff then passes the work to ScoresFileIO
-        //remember those public static images from earlier in MineSweeper?
-        //we are going to create new scaleableIcons out of them.
         ScalableIcon EXPiconAutoScaled = new ScalableIcon(MineSweeper.ExplosionIcon);
         ScalableIcon RVLiconAutoScaled = new ScalableIcon(MineSweeper.MineIcon);
-
-        //            reveal bombs on board
-        for (int i = 0; i < Fieldx; i++) {
-            for (int j = 0; j < Fieldy; j++) {//<-- check for bombs
+        for (int i = 0; i < Fieldx; i++) {//            reveal bombs on board
+            for (int j = 0; j < Fieldy; j++) {
                 if (answers.isBomb(i, j) && !answers.exploded(i, j)) {//<-- if it should be revealed
                     if (won == false){//<-- should they explode?
                         if(answers.marked(i,j)){
@@ -607,52 +510,13 @@ public class Grid extends JPanel {
                         getButtonAt(i,j).revalidate();
                     }
                     getButtonAt(i,j).setText("");//<-- any remove text from the button
-
-                    answers.check(i,j);//<-- check the revealed bomb in a failed attempt to make it so you cant mess it up by toggling dark mode
-                }   //^ remove this check when you get to the excercise after ScoresWindow after it instructs you to do so.
+                }
             }
         }
         int MessageIndex = 0; //update leaderboard then update win or loss message based on highscore status
-        MessageIndex = MineSweeper.scoresFileIO.updateScoreEntry(won, answers.getTime(), answers.cellsExploded(), Fieldx, Fieldy, bombCount, lives);
+        MessageIndex = ScoresFileIO.updateScoreEntry(won, answers.getTime(), answers.cellsExploded(), Fieldx, Fieldy, bombCount, lives);
         GameOverMessageIndex = MessageIndex;//these are used by main game window to set the message that says "Exploded..."" or whatever at the end
         wonValue=(won)?1:0;
     }
-
-
-    //made it to the end? 
-    //Check out the zoom function here and in the main game window
-    //then go to scoresFileIO
-
-
-
-
-
-    //You should really come back to this next one at the end if you want to try to understand the paint function of this next one.
-
-
-    //this next class is complicated. I needed to make it because of zoom + Icons
-
-    //It makes it so that the Icon stays the same size of the button. 
-    //It is also an example of implementing an interface.
-    //I am required to define all of the functions in the interface. I can define others as well, such as my own constructor
-    //(control click Icon if in VS code to see the interface I am implementing.)
-    //--------------------------------------------Scaleable Icon-----------------ScaleableIcon();-----------Scaleable Icon----------------
-    private class ScalableIcon implements Icon {//<-- implement the Icon interface, which contains 3 functions for us to implement.
-        private ImageIcon originalIcon;//<-- getting original icon for sizing purposes
-        public ScalableIcon(Image originalImage) {//<-- Constructor 
-            this.originalIcon = new ImageIcon(originalImage);//<-- create an ImageIcon out of the icon. It is not easy to get the height of the Image class.
-        }
-        public int getIconWidth() {return 0;}//<-- it only matters that these are smaller than the buttons. If it isnt, the button will get bigger.
-        public int getIconHeight() {return 0;}//<-- We are implementing an interface. Other java classes use these functions. One of those, is JButton.
-        public void paintIcon(Component c, Graphics g, int x, int y) {//<-- This will then make the icon the size of the button after.
-            int width = c.getWidth();
-            int height = c.getHeight();
-            Graphics2D g2d = (Graphics2D) g.create();//<-- i hate these because i have to look for stuff like
-            g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);//<-- RenderingHints
-            AffineTransform transform = new AffineTransform();//<-- or the stretch but with matricies that I couldnt remember the name of
-            transform.scale((double) width / originalIcon.getIconWidth(), (double) height / originalIcon.getIconHeight());
-            g2d.drawImage(originalIcon.getImage(), transform, null);
-            g2d.dispose();
-        }
-    }
 }
+

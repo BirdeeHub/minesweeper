@@ -37,9 +37,9 @@ public class MainGameWindow extends javax.swing.JFrame {//Originally grid and ma
     //-----------------------Initialize-----------------------------
     private final int Fieldx, Fieldy, bombCount, lives;//<-- variables to hold field x and y, number of bombs and lives.
     //display stuff
-    private final Color PURPLE = new Color(58, 0, 82);//<-- these variables are final, meaning they can't be changed.
-    private final Color GREEN = new Color(0, 255, 0);       //You can start them as uninitialized if you want, like our board size above,
-    private final Dimension DefaultWindowSize = new Dimension(830, 830);//but they must be set before the end of the constructor.
+    private static final Color PURPLE = new Color(58, 0, 82);//<-- these variables are final, meaning they can't be changed.
+    private static final Color GREEN = new Color(0, 255, 0);       //You can start them as uninitialized if you want, like our board size above,
+    private static final Dimension DefaultWindowSize = new Dimension(830, 830);//but they must be set before the end of the constructor.
 
     private JLabel GameOverDisplay = new JLabel();//our other 3 display labels and functions to set them.
     private JLabel BombsFoundDisplay = new JLabel();
@@ -50,11 +50,11 @@ public class MainGameWindow extends javax.swing.JFrame {//Originally grid and ma
     private void setLivesLostDisplay(){//<-- you can initialize functions before the constructor but only do it if they are short and actually improve readability
         livesLostDisplay.setText("L:" + Integer.toString(grid.getLivesLeft()) + "/" + Integer.toString(lives));
     }
-    private final static String highScoreMessage = "Record Time!";//to change text of game over messages in menubar display, edit from here
-    private final static String newBoardSizeAndWonMessage = "New Board Cleared!";
-    private final static String wonAndNotHighScoreMessage = "Cleared!";
-    private final static String diedButNewBoardMessage = "1st Board Death";//<-- you can make things both final and static if you want
-    private final static String diedAndNotNewBoardMessage = "Exploded...";
+    private static final String highScoreMessage = "Record Time!";//to change text of game over messages in menubar display, edit from here
+    private static final String newBoardSizeAndWonMessage = "New Board Cleared!";
+    private static final String wonAndNotHighScoreMessage = "Cleared!";
+    private static final String diedButNewBoardMessage = "1st Board Death";//<-- you can make things both final and static if you want
+    private static final String diedAndNotNewBoardMessage = "Exploded...";
     private void setGameOverDisplay(){//<-- we set which one based on an index from grid whenever we call this function. same as the other labels.
         int[] GOIndex = new int[2];//<-- This is a 2 integer array. GOIndex[0] is message index, GOIndex[1] is won value.
         GOIndex = grid.getGameOverIndex();//<-- if not in game over state, these will both be -1.
@@ -156,10 +156,6 @@ public class MainGameWindow extends javax.swing.JFrame {//Originally grid and ma
                 }
             }
         });
-
-
-        //-----------------this next one is complex. skip to the next one for now. come back to this section later.--------------------------------
-
         grid.addMouseWheelListener(new MouseWheelListener() {//zoom and scroll (only active over grid because it is added to the JPanel, i.e. the grid instance itself)
             JScrollBar verticalScrollBar = scrollPane.getVerticalScrollBar();
             JScrollBar horizontalScrollBar = scrollPane.getHorizontalScrollBar();
@@ -204,8 +200,6 @@ public class MainGameWindow extends javax.swing.JFrame {//Originally grid and ma
             }
         });
     }
-    
-    //-----------------------start reading again here---------------------------------
     private void initComponentsAndMiscListeners() {//-------------------initComponents() on window below-----------------------------------------------------------------------------
         //--------------init the stuff that doesnt need to be global
         JMenuBar menuBar = new JMenuBar();
@@ -242,7 +236,6 @@ public class MainGameWindow extends javax.swing.JFrame {//Originally grid and ma
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setPreferredSize(DefaultWindowSize);
         setIconImage(MineSweeper.MineIcon);
-
         //---------------------component adding and layout managing
         menuBagConstraints.gridx =0;
         menuBagConstraints.gridy =0;//           theyre all in a menu bar.

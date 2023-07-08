@@ -96,7 +96,7 @@ public class ScoresWindow extends JFrame {
         }
     }//-------------------------or delete a score.
     private void BoardButtonDeleteAction(JButton BoardButtonPressed){
-        MineSweeper.scoresFileIO.deleteScoreEntry(((ScoreEntry)BoardButtonPressed.getClientProperty("BoardTarget")));//<-- delete this button's score from file
+        ScoresFileIO.deleteScoreEntry(((ScoreEntry)BoardButtonPressed.getClientProperty("BoardTarget")));//<-- delete this button's score from file
         BoardPanel.removeAll();//remove items in the GridLayout panels which are our columns because we are going to re-add from file.
         LivesPanel.removeAll();
         TimePanel.removeAll();
@@ -279,7 +279,7 @@ public class ScoresWindow extends JFrame {
         String EHL="</u>";//EndHighLight
         String Shtml="<html>";
         String Ehtml="</html>";
-        ScoreEntry[] entries = MineSweeper.scoresFileIO.readLeaderboard();//<-- read scores file to ScoreEntry array
+        ScoreEntry[] entries = ScoresFileIO.readLeaderboard();//<-- read scores file to ScoreEntry array
         if(entries==null){//<-- no file was present
             FileIssue=true;
             BoardLabel = new JLabel[1];
@@ -374,39 +374,3 @@ public class ScoresWindow extends JFrame {
         }
     }
 }
-/*
-    What do you think? 
-    Could you envision how to break down something you would like to make, into component parts like this?
-    Staring at a blank page is very hard. But with a semi decent plan, you can start, and make it better later.
-    Errors are good. They tell you what went wrong. Stuff working, but not the way you want is harder.
-
-    On that note, could you debug my toggle dark mode button? The button is in help window. 
-    The function is in Grid and it only does weird stuff on game over screen.
-    I never use it (I made it how I like it already) so I wasn't planning on improving it myself, but its great practice for you!
-    If you get it working you could add one to the main game window buttons and attach it to the same button too!
-    doing it for the main window would involve creating a new function you make that changes the buttons of the main game window. 
-    And then place a call to it inside the function that is called when the toggle button is pressed. The info was on the way to grid anyway so it exists. 
-    You can't easily mess up game logic in that function, just if the button changes the display correctly, so its the perfect candidate.
-    The game is designed like that as much as possible, where changing stuff shouldnt change stuff you wouldnt expect it to change.
-    
-    for example, setting the text color or background or text of an icon will never make the game technically unwinnable because display is separate from game logic, 
-    and check makes sure it wasnt previously checked before incrementing its count, so calling it too many times on a button wont break it
-
-    The toggle dark mode error is quite hard for a beginner in a new code base. If you figure it out, you did a good job.
-    Think about what things in minefield you can check for and use, and when the bug is occurring and on what cells. 
-    Also, a new icon will overwrite the old one so you have to then put the icon back on it (after you tell it when to do that of course)
-    
-    I do have answers for the excercise in the other github branch (Jarred) where I fixed the function if you get real stuck. 
-    Dont forget to remove the thing i had in game over that I tell you to remove at the start of the excercise. 
-    It will make spotting what is happening wrong much easier!
-    After that, you will not have to do anything outside of toggle dark mode to fix it.
-    
-    After all that:
-    I would suggest going and doing one of those python learn to code courses now that you can see how data flows around a program in an object-oriented language.
-    It will be super easy learning the syntax for that now that you know all of this, and you will be making cool stuff in no time!
-    Probably, before you even finish their course you could be making something like this in python after doing this mini course game thing.
-    Python is pretty similar, except you dont have to explicitly say a lot of the stuff you can specify in java, it figures it out based on context.
-    It also has a more varied code base to pull from to do a lot of different stuff, and is easier to compile and run.
-
-    Good Luck!!
-*/
