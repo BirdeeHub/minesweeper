@@ -22,8 +22,7 @@ class MineSweeper {
             return false;
         }
     }
-    /** --a fancy comment-- @param aaaaaarg!!! These are our possible command line arguments (all > 0)
-     * 
+    /** These are our possible command line arguments (all > 0)
      * @param args [String <o or m>], int width, int height, int BombCount, int lives
      */
     public static void main(String[] args) {
@@ -41,14 +40,14 @@ class MineSweeper {
         int width, height, bombCount, lives;
         if(args.length == 4){
             try{
-                width = (int)(Integer.parseInt(args[0]));//<-- checking and saving each item in our args array as an int
-                height = (int)(Integer.parseInt(args[1]));//<-- each index corresponds to a string. This is the second index.
-                bombCount = (int)(Integer.parseInt(args[2]));//<-- Integer.parseInt(String) converts strings to integers
-                lives = (int)(Integer.parseInt(args[3]));//<-- (int) makes sure it is read as an integer. this is called a "cast"
-                if(width > 0 && height > 0 && bombCount > 0 && lives > 0){//<-- if you put in 4 positive numbers
+                width = (int)(Integer.parseInt(args[0]));
+                height = (int)(Integer.parseInt(args[1]));
+                bombCount = (int)(Integer.parseInt(args[2]));
+                lives = (int)(Integer.parseInt(args[3]));
+                if(width > 0 && height > 0 && bombCount > 0 && lives > 0){
                     EventQueue.invokeLater(new Runnable(){public void run(){new MainGameWindow(width, height, bombCount, lives).setVisible(true);}});
-                }else{//                                                                      <--- else if not correct arguments, 
-                    System.out.println("integer arguments only: width, height, BombCount, lives (where all are > 0)");//<-- print an error message
+                }else{
+                    System.out.println("integer arguments only: width, height, BombCount, lives (where all are > 0)");
                     EventQueue.invokeLater(new Runnable(){public void run(){new OpeningWindow().setVisible(true);}});
                 }
             }catch(NumberFormatException e){
@@ -56,22 +55,20 @@ class MineSweeper {
                 EventQueue.invokeLater(new Runnable(){public void run(){new OpeningWindow().setVisible(true);}});
             }
         }else if(args.length == 5){
-            if(args[0].equals("o")||args[0].equals("m")){//<-- aString.equals(anotherString) is how you compare strings.
+            if(args[0].equals("o")||args[0].equals("m")){
                 try{
-                    width = (int)(Integer.parseInt(args[1]));//<-- same as before
+                    width = (int)(Integer.parseInt(args[1]));
                     height = (int)(Integer.parseInt(args[2]));
                     bombCount = (int)(Integer.parseInt(args[3]));
                     lives = (int)(Integer.parseInt(args[4]));
                     if(width > 0 && height > 0 && bombCount > 0 && lives > 0){
-                        if(args[0].equals("m")){//<-- check if the first arg was an "m"
+                        if(args[0].equals("m")){
                             EventQueue.invokeLater(new Runnable(){public void run(){
                                 new MainGameWindow(width, height, bombCount, lives).setVisible(true);
                             }});
                         }
-                        if(args[0].equals("o")){//<-- check if the first arg was an "o"
-                            EventQueue.invokeLater(new Runnable(){public void run(){
-                                new OpeningWindow(args[1],args[2], args[3], args[4]).setVisible(true);//<-- Opening window can take strings
-                            }});       //reference items in an array with name[index] where index starts at 0
+                        if(args[0].equals("o")){//Opening window can take strings
+                            EventQueue.invokeLater(new Runnable(){public void run(){new OpeningWindow(args[1],args[2], args[3], args[4]).setVisible(true);}});
                         }
                     }else{
                         System.out.println("<m or o>, width, height, BombCount, lives");

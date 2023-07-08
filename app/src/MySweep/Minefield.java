@@ -58,8 +58,7 @@ class Minefield{//a data class for Grid. contains and manages all mutable game-s
             if((8<(Fieldx*Fieldy-bombCount))||//IF field has 9 non-bomb cells, OR
             ((5<(Fieldx*Fieldy-bombCount))&&(a==0||a==(Fieldx-1)||b==0||b==(Fieldy-1)))||//clicked on an edge and 6 non-bomb cells, OR
             ((3<(Fieldx*Fieldy-bombCount))&&((a==0 && b==(Fieldy-1))||(b==0 && a==(Fieldx-1))||(a==0 && b==0)||(b==(Fieldy-1) && a==(Fieldx-1))))){
-                                                                                        //^^ clicked a corner and 4 non-bomb cells
-                while(i<bombCount){//<-- while we still have bombs to place
+                while(i<bombCount){                                                    //^^ clicked a corner and 4 non-bomb cells
                     int Randx=(int)Math.round(Math.random()*(Fieldx-1));//place a bomb in a random cell unless occupied or is too close 
                     int Randy=(int)Math.round(Math.random()*(Fieldy-1));//repeatedly until no bombs are left to distribute
                     if((cell[Randx][Randy]==false)&&(((Randx <(a-1))||(Randx >(a+1)))||((Randy <(b-1))||(Randy >(b+1))))){//<-- if not too close to us

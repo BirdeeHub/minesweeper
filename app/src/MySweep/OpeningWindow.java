@@ -17,16 +17,15 @@ import java.awt.KeyboardFocusManager;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
 
-
 public class OpeningWindow extends JFrame {//<-- its a JFrame
-    private JTextField WidthField;//<-- user text (strings) goes into these.
+    private JTextField WidthField;
     private JTextField HeightField;//<-- we create the actual instances to go in these in the constructor
     private JTextField BombNumber;
     private JTextField LivesNumber;
-    private JButton Start = new JButton("Start!");//<-- the start button!
-    private JButton ScoreBoard = new JButton();//<-- user can press these
+    private JButton Start = new JButton("Start!");
+    private JButton ScoreBoard = new JButton();
     private JButton HelpWindow = new JButton();
-    private JLabel LifeFieldLabel = new JLabel();//<-- these JLabels will display stuff
+    private JLabel LifeFieldLabel = new JLabel();
     private JLabel WidthFieldLabel = new JLabel();
     private JLabel HeightFieldLabel = new JLabel();
     private JLabel BombFieldLabel = new JLabel();
@@ -35,14 +34,14 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
     //-----------------------------------------Constructors----------------------------------------------------------
     public OpeningWindow(String initialx, String initialy, String initialbombno, String initiallives) {
         WidthField = new JTextField(initialx);
-        HeightField = new JTextField(initialy);//<-- when you use the JTextField constructor with a string as an argument,
-        BombNumber = new JTextField(initialbombno);             //it prepopulates the field with that string
+        HeightField = new JTextField(initialy);
+        BombNumber = new JTextField(initialbombno);
         LivesNumber = new JTextField(initiallives);
-        initComponents();//<-- sets up our window components
+        initComponents();
     }
     public OpeningWindow() {
         WidthField = new JTextField();
-        HeightField = new JTextField();//<-- initialize them without pre populated text instead
+        HeightField = new JTextField();
         BombNumber = new JTextField();
         LivesNumber = new JTextField();
         initComponents();
@@ -50,25 +49,23 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
     //-------------------------------------------------Start Action Performed---called by action listener on start button-------------------
     private void StartActionPerformed() {//this function runs MainGameWindow, performs error checking and displays errors
         try{
-            int width =(int)(Integer.parseInt(WidthField.getText()));//(int) makes sure it is read as an integer. This is called a cast.
-            int height =(int)(Integer.parseInt(HeightField.getText()));//Integer.parseInt(String) converts strings to integers
-            int bombCount = (int)(Integer.parseInt(BombNumber.getText()));//if the parses fail, the catch clause will be triggered
-            int lives = (int)(Integer.parseInt(LivesNumber.getText()));//this is our first check on user inputs
-            if(width*height<=bombCount||bombCount<0||lives<1||width<1||height<1){//<-- and here, we check if they are valid numbers for the game
+            int width =(int)(Integer.parseInt(WidthField.getText()));
+            int height =(int)(Integer.parseInt(HeightField.getText()));
+            int bombCount = (int)(Integer.parseInt(BombNumber.getText()));
+            int lives = (int)(Integer.parseInt(LivesNumber.getText()));
+            if(width*height<=bombCount||bombCount<0||lives<1||width<1||height<1){
                 if(lives<1)LifeFieldLabel.setText("no life");
-                if(width<1)WidthFieldLabel.setText("invalid width");//<-- and tell the user what they did wrong 
-                if(height<1)HeightFieldLabel.setText("invalid height");//  by setting the text of a label we already had
+                if(width<1)WidthFieldLabel.setText("invalid width");
+                if(height<1)HeightFieldLabel.setText("invalid height");
                 if(width*height<=bombCount)BombFieldLabel.setText("Space<Bombs");
-                if(bombCount<0)BombFieldLabel.setText("Bombs<0");//notice the if statement at the start of each.
-                return;//<-- return early, ending execution of the function, because input was bad.
+                if(bombCount<0)BombFieldLabel.setText("Bombs<0");
+                return;
             }
             EventQueue.invokeLater(new Runnable() {
                 public void run() {new MainGameWindow(width,height,bombCount,lives).setVisible(true);}
             });
-            OpeningWindow.this.dispose();//<-- we dispose windows unless we want to close the whole program.
-        }catch(NumberFormatException e){
-            TitleLabel.setText("Invalid field(s)");//<-- if an error, tell the user their input was too stringy
-        }
+            OpeningWindow.this.dispose();
+        }catch(NumberFormatException e){TitleLabel.setText("Invalid field(s)");}
     } 
     //---------------------------------initComponents()-----called by constructor-----------------------------------------------------------------
     private void initComponents() {//<-- a private function that doesnt return anything. It does stuff though.
@@ -243,7 +240,7 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
         containerConstraints.fill = GridBagConstraints.BOTH;
         getContentPane().add(Start, containerConstraints);
 
-        pack();//<-- this pack(); causes it to evaluate sizes and paint the contents of the pane
-        getContentPane().setVisible(true);//<-- then this displays the pane
+        pack();
+        getContentPane().setVisible(true);
     }
 }
