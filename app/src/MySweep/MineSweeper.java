@@ -27,11 +27,10 @@ class MineSweeper {
      * @param args [String <o or m>], int width, int height, int BombCount, int lives
      */
     public static void main(String[] args) {
-        try {//(I found out that if you dont do this thing some Swing library stuff breaks on mac)
-            // Set cross-platform Java L&F (also called "Metal") 
+        try {// Set cross-platform Java L&F (also called "Metal") 
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        }                                          //^I copy pasted this straight from the oracle documentation
-        catch (UnsupportedLookAndFeelException e) {//and thats just fine. Now I can set button backgrounds on mac.
+        }//(I found out that if you dont do this thing some Swing library stuff breaks on mac)
+        catch (UnsupportedLookAndFeelException e) {
         }
         catch (ClassNotFoundException e) {
         }
