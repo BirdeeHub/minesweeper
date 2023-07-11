@@ -204,10 +204,8 @@ public class Grid extends JPanel {
     }
     void setCellFontSize(){//<-- call this from main window after pack or resize to get correct component size before font size.
         int cellHeight = Grid.this.getComponent(0).getHeight();
-        int FontSize = cellHeight- 1;
-        if(cellHeight>18)FontSize=18;
-        Font newFont = new Font("Tahoma", 0, FontSize);
-        for(int x = 0; x < Fieldx; x++)for(int y = 0; y < Fieldy; y++){//<-- more nested for loops. Everything is a grid haha
+        Font newFont = new Font("Tahoma", 0, ((cellHeight>18)?18:cellHeight - 1));
+        for(int x = 0; x < Fieldx; x++)for(int y = 0; y < Fieldy; y++){
             getButtonAt(x,y).setFont(newFont);
         }
     }
@@ -228,12 +226,14 @@ public class Grid extends JPanel {
         return gridSizesOldNew;
     }
     void resetZoom(Dimension windowSize){
-        Dimension newCellSize= new Dimension(windowSize.width/Fieldx, windowSize.height/Fieldy);
-        Font newFont = new Font("Tahoma", 0, ((newCellSize.height>18)?18:newCellSize.height - 1));
-        for (int x = 0; x < Fieldx; x++){
-            for (int y = 0; y < Fieldy; y++){
-                getButtonAt(x,y).setPreferredSize(newCellSize);
-                getButtonAt(x,y).setFont(newFont);
+        if(windowSize.width/Fieldx<Grid.this.getComponent(0).getWidth() && windowSize.height/Fieldy<Grid.this.getComponent(0).getHeight()){
+            Dimension newCellSize= new Dimension(windowSize.width/Fieldx, windowSize.height/Fieldy);
+            Font newFont = new Font("Tahoma", 0, ((newCellSize.height>18)?18:newCellSize.height - 1));
+            for (int x = 0; x < Fieldx; x++){
+                for (int y = 0; y < Fieldy; y++){
+                    getButtonAt(x,y).setPreferredSize(newCellSize);
+                    getButtonAt(x,y).setFont(newFont);
+                }
             }
         }
     }
