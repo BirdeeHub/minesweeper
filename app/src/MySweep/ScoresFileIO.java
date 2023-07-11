@@ -13,7 +13,7 @@ class ScoresFileIO{//reads from file, creates scoreEntry instances based on the 
     private static final String scoresFileNameWindows = System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Roaming" + File.separator + "minesweeperScores" + File.separator + "Leaderboard.txt";
     private static final String scoresFileNameOther = System.getProperty("user.home") + File.separator + ".minesweeper" + File.separator + "Leaderboard.txt";
     private static final String scoresFileName = (System.getProperty("os.name").toLowerCase().contains("win"))?scoresFileNameWindows:scoresFileNameOther;
-    public ScoresFileIO(){}
+    //Its all static so we do not need a constructor.
     //----------------------------------WRITE------------------------------------------------------WRITE-------------------------------------------
     private static void writeLeaderboard(ScoreEntry[] allEntries, boolean append){// writes from Score Entries to file
         StringBuilder scoresFileString = new StringBuilder();// StringBuilder to store and create string from entries
