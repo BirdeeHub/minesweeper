@@ -227,6 +227,16 @@ public class Grid extends JPanel {
         gridSizesOldNew[3] = (newCellSize.height*Fieldy);
         return gridSizesOldNew;
     }
+    void resetZoom(Dimension windowSize){
+        Dimension newCellSize= new Dimension(windowSize.width/Fieldx, windowSize.height/Fieldy);
+        Font newFont = new Font("Tahoma", 0, ((newCellSize.height>18)?18:newCellSize.height - 1));
+        for (int x = 0; x < Fieldx; x++){
+            for (int y = 0; y < Fieldy; y++){
+                getButtonAt(x,y).setPreferredSize(newCellSize);
+                getButtonAt(x,y).setFont(newFont);
+            }
+        }
+    }
     boolean isDarkMode(){return DarkMode;}//<-- this is a function to get if dark mode is on
     void toggleDarkMode(){
         this.DarkMode = !DarkMode;
