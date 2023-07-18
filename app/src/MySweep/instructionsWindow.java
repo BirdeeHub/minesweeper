@@ -42,7 +42,7 @@ public class instructionsWindow extends javax.swing.JFrame {
         JButton Back = new JButton("Back");
         JToggleButton DMToggleButton = new JToggleButton("<html>Dark<br>Mode</html>");
         if(ParentWindow instanceof MainGameWindow){
-            if(((MainGameWindow)ParentWindow).isDMOn())DMToggleButton.doClick();//<--sync toggle button status with dark mode status
+            if(MineSweeper.isDarkMode)DMToggleButton.doClick();//<--sync toggle button status with dark mode status
         }
         Back.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {

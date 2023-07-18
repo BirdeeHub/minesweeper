@@ -89,9 +89,6 @@ public class MainGameWindow extends javax.swing.JFrame {
     private JButton HowToPlay = new JButton("Help");
     private JToggleButton toggleQuestionMarking = new JToggleButton("?'s?");
     private JButton ScoreBoard = new JButton("HiSc");
-    boolean isDMOn(){
-        return grid.isDarkMode();
-    }
 //---------------------MainGameWindow CONSTRUCTOR----------------------MainGameWindow CONSTRUCTOR----------------------------MainGameWindow CONSTRUCTOR------------------------------
     public MainGameWindow(int w, int h, int bombNum, int lives) {
         Fieldx = w;
@@ -202,7 +199,7 @@ public class MainGameWindow extends javax.swing.JFrame {
         MetalToggleButtonUI toggleButtonSelectedColor = new MetalToggleButtonUI() {
             @Override
             protected Color getSelectColor() {
-                return (isDMOn())?PURPLE:super.getSelectColor();
+                return (MineSweeper.isDarkMode)?PURPLE:super.getSelectColor();
             }
         };
         //------------------------set stuff
@@ -241,7 +238,7 @@ public class MainGameWindow extends javax.swing.JFrame {
         getContentPane().setPreferredSize(DefaultWindowSize);
         setIconImage(MineSweeper.MineIcon);
         //dark mode vs light mode
-        if(isDMOn()){
+        if(MineSweeper.isDarkMode){
             markToggle.setForeground(Color.WHITE);
             markToggle.setBackground(Color.BLACK);
             chordToggle.setForeground(Color.WHITE);
@@ -370,7 +367,7 @@ public class MainGameWindow extends javax.swing.JFrame {
     }
     void toggleDarkMode(){
         grid.toggleDarkMode();
-        if(isDMOn()){
+        if(MineSweeper.isDarkMode){
             markToggle.setForeground(Color.WHITE);
             markToggle.setBackground(Color.BLACK);
             chordToggle.setForeground(Color.WHITE);

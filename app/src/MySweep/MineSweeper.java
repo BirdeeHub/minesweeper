@@ -11,6 +11,7 @@ import java.nio.file.Paths;
 class MineSweeper {
     public static final Image MineIcon = new ImageIcon(MineSweeper.class.getResource(((isJarFile())?"/src/MySweep/":"") + "Icons/MineSweeperIcon.png")).getImage();
     public static final Image ExplosionIcon = new ImageIcon(MineSweeper.class.getResource(((isJarFile())?"/src/MySweep/":"") + "Icons/GameOverExplosion.png")).getImage();
+    public static boolean isDarkMode = true;
     private static boolean isJarFile() {//<-- apparently .jar files have a magic number that shows if it is a jar file.
         try (FileInputStream fileInputStream = new FileInputStream(Paths.get(System.getProperty("java.class.path")).toFile())) {
             byte[] magicNumber = new byte[4];
