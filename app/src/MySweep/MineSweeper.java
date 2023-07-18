@@ -2,7 +2,6 @@ package MySweep;
 
 import javax.swing.ImageIcon;
 import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 import java.awt.EventQueue;
 import java.awt.Image;
 import java.io.FileInputStream;
@@ -30,24 +29,24 @@ class MineSweeper {
         for (Frame frame : frames) {//<-- a fancy for loop. "for each frame in frames array"
             if(frame instanceof MainGameWindow){//<-- check if it is a specific type you can cast it as the correct window
                 ((MainGameWindow)frame).toggleDarkMode();//<-- cast as correct window, and run the function from that instance of the class.
-            }       //right now, the only frame we have defined toggleDarkMode() for is MainGameWindow.
+            }else if(frame instanceof InstructionsWindow){
+                //((InstructionsWindow)frame).toggleDarkMode();
+            }else if(frame instanceof OpeningWindow){
+                //((OpeningWindow)frame).toggleDarkMode();
+            }else if(frame instanceof ScoresWindow){
+                //((ScoresWindow)frame).toggleDarkMode();
+            }
         }
     }
+
     /** These are our possible command line arguments (all > 0)
      * @param args [String <o or m>], int width, int height, int BombCount, int lives
      */
     public static void main(String[] args) {
-        try {// Set cross-platform Java L&F (also called "Metal") 
+        try {//(I found out that if you dont do this thing some Swing library stuff breaks on mac)
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        }//(I found out that if you dont do this thing some Swing library stuff breaks on mac)
-        catch (UnsupportedLookAndFeelException e) {
-        }
-        catch (ClassNotFoundException e) {
-        }
-        catch (InstantiationException e) {
-        }
-        catch (IllegalAccessException e) {
-        }
+        }catch (Exception e) {}
+        
         int width, height, bombCount, lives;
         if(args.length == 4){
             try{
