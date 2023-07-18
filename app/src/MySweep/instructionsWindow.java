@@ -36,7 +36,7 @@ public class InstructionsWindow extends javax.swing.JFrame {
         //listeners
         JButton Back = new JButton("Back");
         JToggleButton DMToggleButton = new JToggleButton("<html>Dark<br>Mode</html>");
-        if(Settings.isDarkMode)DMToggleButton.doClick();//<--sync toggle button status with dark mode status
+        if(MineSweeper.isDarkMode())DMToggleButton.doClick();//<--sync toggle button status with dark mode status
         Back.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 ((JFrame) SwingUtilities.getWindowAncestor(((JButton) e.getSource()))).dispose();
@@ -44,7 +44,7 @@ public class InstructionsWindow extends javax.swing.JFrame {
         });
         DMToggleButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                Settings.toggleDarkMode();
+                MineSweeper.toggleDarkMode();
             }
         });
         KeyAdapter keyAdapter = new KeyAdapter() {
