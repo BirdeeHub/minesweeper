@@ -18,7 +18,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Component;
 import javax.swing.JToggleButton;
 
-public class instructionsWindow extends javax.swing.JFrame {
+public class InstructionsWindow extends javax.swing.JFrame {
     //initialize variables
     private final String InstructionsText = "<html>Begin by choosing numbers for width by height, then bombs, then lives. 25x25 42-60 bombs, 1-3 lives is a good starting point, but choose whatever you want. Keep in mind it takes a little bit to pull up the window if you choose something over 200x200. (CTRL+Scroll to zoom... fair warning, 200x200 is 40,000 cells so its gonna take you a while.)<br><br>"
     +"If you click a bomb, you lose a life, lose all your lives to lose the game. Click a cell to reveal if it is a bomb. If your cell is not a bomb, it will instead display how many bombs are in the 8 surrounding cells, and if there are none, it will fill out all bombless cells surrounding the cell you clicked until no cell marked with a zero is adjacent to another cell that could be marked with a zero.<br>"
@@ -27,13 +27,8 @@ public class instructionsWindow extends javax.swing.JFrame {
     +"I have made a modification from the original ruleset in that you will always reveal a square with no adjacent bombs on your first click of the game instead of just requiring the cell itself to not be a bomb (unless your board size and #ofBombs prohibit this, in which case it will revert to the original ruleset).<br><br>"
     +"CTRL+SHIFT+Click on a score to delete it. Personal leaderboards will be saved in %userprofile%\\AppData\\Roaming\\minesweeperScores on windows, and ~/.minesweeper on linux or mac. If you alter the leaderboard manually and do not follow the format, scores will be unreadable by the program. format: x:y:bombCount:lives-livesLeft-time Additionally, if Leaderboard.txt is deleted or moved your scores can't be read until you move it back, but a new Leaderboard.txt file will be created to record future games.</html>";
     
-    private JFrame ParentWindow = null;
     //constructors
-    public instructionsWindow() {
-        initComponents();
-    }
-    public instructionsWindow(JFrame ParentWindow){
-        this.ParentWindow = ParentWindow;
+    public InstructionsWindow() {
         initComponents();
     }
     //init components
@@ -41,9 +36,7 @@ public class instructionsWindow extends javax.swing.JFrame {
         //listeners
         JButton Back = new JButton("Back");
         JToggleButton DMToggleButton = new JToggleButton("<html>Dark<br>Mode</html>");
-        if(ParentWindow instanceof MainGameWindow){
-            if(MineSweeper.isDarkMode)DMToggleButton.doClick();//<--sync toggle button status with dark mode status
-        }
+        if(Settings.isDarkMode)DMToggleButton.doClick();//<--sync toggle button status with dark mode status
         Back.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e) {
                 ((JFrame) SwingUtilities.getWindowAncestor(((JButton) e.getSource()))).dispose();
@@ -51,9 +44,7 @@ public class instructionsWindow extends javax.swing.JFrame {
         });
         DMToggleButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e){
-                if(ParentWindow instanceof MainGameWindow){
-                    ((MainGameWindow)ParentWindow).toggleDarkMode();
-                }
+                Settings.toggleDarkMode();
             }
         });
         KeyAdapter keyAdapter = new KeyAdapter() {
@@ -97,15 +88,13 @@ public class instructionsWindow extends javax.swing.JFrame {
         getContentPane().add(Back, containerConstraints);//<-- then add your component to the pane, but with containerConstraints as a 2nd argument
 
         containerConstraints.weightx = 1.0;
-        containerConstraints.gridwidth = (ParentWindow instanceof MainGameWindow)?1:2;//<-- this is a ternary expression based on what window called this.
+        containerConstraints.gridwidth = 1;
         containerConstraints.gridx = 1;
         getContentPane().add(TitleLabel, containerConstraints);
         containerConstraints.weightx = 0.0;
 
-        if(ParentWindow instanceof MainGameWindow){//<-- because we only have the dark mode toggle button for main game window
-            containerConstraints.gridx = 2;
-            getContentPane().add(DMToggleButton, containerConstraints);
-        }
+        containerConstraints.gridx = 2;
+        getContentPane().add(DMToggleButton, containerConstraints);
 
         containerConstraints.gridx = 0;
         containerConstraints.gridy = 1;

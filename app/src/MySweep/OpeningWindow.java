@@ -96,7 +96,7 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
             public void actionPerformed(ActionEvent evt) {//these are anonymous interface classes. They are defined within the () of a function call.
                 EventQueue.invokeLater(new Runnable() {
                     public void run() {
-                        new instructionsWindow().setVisible(true);
+                        new InstructionsWindow().setVisible(true);
                     }
                 });//<-- see?
             }

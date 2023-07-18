@@ -199,7 +199,7 @@ public class MainGameWindow extends javax.swing.JFrame {
         MetalToggleButtonUI toggleButtonSelectedColor = new MetalToggleButtonUI() {
             @Override
             protected Color getSelectColor() {
-                return (MineSweeper.isDarkMode)?PURPLE:super.getSelectColor();
+                return (Settings.isDarkMode)?PURPLE:super.getSelectColor();
             }
         };
         //------------------------set stuff
@@ -238,7 +238,7 @@ public class MainGameWindow extends javax.swing.JFrame {
         getContentPane().setPreferredSize(DefaultWindowSize);
         setIconImage(MineSweeper.MineIcon);
         //dark mode vs light mode
-        if(MineSweeper.isDarkMode){
+        if(Settings.isDarkMode){
             markToggle.setForeground(Color.WHITE);
             markToggle.setBackground(Color.BLACK);
             chordToggle.setForeground(Color.WHITE);
@@ -329,7 +329,7 @@ public class MainGameWindow extends javax.swing.JFrame {
             public void actionPerformed(ActionEvent evt) {
                 EventQueue.invokeLater(new Runnable() {
                     public void run() {
-                        new instructionsWindow(MainGameWindow.this).setVisible(true);
+                        new InstructionsWindow().setVisible(true);
                     }
                 });
             }
@@ -367,7 +367,7 @@ public class MainGameWindow extends javax.swing.JFrame {
     }
     void toggleDarkMode(){
         grid.toggleDarkMode();
-        if(MineSweeper.isDarkMode){
+        if(Settings.isDarkMode){
             markToggle.setForeground(Color.WHITE);
             markToggle.setBackground(Color.BLACK);
             chordToggle.setForeground(Color.WHITE);
