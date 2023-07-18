@@ -68,7 +68,20 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
         }catch(NumberFormatException e){TitleLabel.setText("Invalid field(s)");}
     } 
     void toggleDarkMode(){
-
+        setDarkMode();
+    }
+    private void setDarkMode(){
+        if(MineSweeper.isDarkMode()){
+            //Start
+            //ScoreBoard
+            //HelpWindow
+            //LifeFieldLabel
+            //WidthFieldLabel
+            //HeightFieldLabel
+            //BombFieldLabel
+            //TitleLabel
+            //AuthorLabel
+        }
     }
     //---------------------------------initComponents()-----called by constructor-----------------------------------------------------------------
     private void initComponents() {//<-- a private function that doesnt return anything. It does stuff though.
@@ -246,4 +259,5 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
         pack();
         getContentPane().setVisible(true);
     }
+
 }

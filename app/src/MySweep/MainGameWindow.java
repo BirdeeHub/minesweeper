@@ -89,6 +89,10 @@ public class MainGameWindow extends javax.swing.JFrame {
     private JButton HowToPlay = new JButton("Help");
     private JToggleButton toggleQuestionMarking = new JToggleButton("?'s?");
     private JButton ScoreBoard = new JButton("HiSc");
+    void toggleDarkMode(){
+        grid.toggleDarkMode();
+        this.setDarkMode();
+    }
 //---------------------MainGameWindow CONSTRUCTOR----------------------MainGameWindow CONSTRUCTOR----------------------------MainGameWindow CONSTRUCTOR------------------------------
     public MainGameWindow(int w, int h, int bombNum, int lives) {
         Fieldx = w;
@@ -206,6 +210,7 @@ public class MainGameWindow extends javax.swing.JFrame {
         setBombsFoundDisplay();
         setLivesLostDisplay();
         setGameOverDisplay();
+        setDarkMode();
         toggleQuestionMarking.setUI(toggleButtonSelectedColor);
         markToggle.setUI(toggleButtonSelectedColor);
         chordToggle.setUI(toggleButtonSelectedColor);
@@ -237,23 +242,6 @@ public class MainGameWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setPreferredSize(DefaultWindowSize);
         setIconImage(MineSweeper.MineIcon);
-        //dark mode vs light mode
-        if(MineSweeper.isDarkMode()){
-            markToggle.setForeground(Color.WHITE);
-            markToggle.setBackground(Color.BLACK);
-            chordToggle.setForeground(Color.WHITE);
-            chordToggle.setBackground(Color.BLACK);
-            toggleQuestionMarking.setForeground(Color.WHITE);
-            toggleQuestionMarking.setBackground(Color.BLACK);
-            NewGame.setForeground(Color.WHITE);
-            NewGame.setBackground(Color.BLACK);
-            Reset.setForeground(Color.WHITE);
-            Reset.setBackground(Color.BLACK);
-            HowToPlay.setForeground(Color.WHITE);
-            HowToPlay.setBackground(Color.BLACK);
-            ScoreBoard.setForeground(Color.WHITE);
-            ScoreBoard.setBackground(Color.BLACK);
-        }
         //---------------------component adding and layout managing
         menuBagConstraints.gridx =0;
         menuBagConstraints.gridy =0;
@@ -365,8 +353,7 @@ public class MainGameWindow extends javax.swing.JFrame {
 
         getContentPane().setVisible(true);
     }
-    void toggleDarkMode(){
-        grid.toggleDarkMode();
+    private void setDarkMode(){
         if(MineSweeper.isDarkMode()){
             markToggle.setForeground(Color.WHITE);
             markToggle.setBackground(Color.BLACK);

@@ -37,27 +37,7 @@ public class InstructionsWindow extends javax.swing.JFrame {
     private JLabel TitleLabel = new JLabel();
     private JLabel instructions = new JLabel();
     void toggleDarkMode(){
-        if(MineSweeper.isDarkMode()){
-            Back.setBackground(Color.BLACK);
-            Back.setForeground(Color.WHITE);
-            DMToggleButton.setBackground(Color.BLACK);
-            DMToggleButton.setForeground(Color.WHITE);
-            instructions.setOpaque(true);
-            TitleLabel.setOpaque(true);
-            TitleLabel.setForeground(Color.GREEN);
-            instructions.setForeground(Color.WHITE);
-        }else{
-            Back.setBackground(null);
-            Back.setIcon(DefaultButtonIcon);
-            Back.setForeground(Color.BLACK);
-            DMToggleButton.setBackground(null);
-            DMToggleButton.setIcon(DefaultButtonIcon);
-            DMToggleButton.setForeground(Color.BLACK);
-            instructions.setOpaque(false);
-            TitleLabel.setOpaque(false);
-            TitleLabel.setForeground(PURPLE);
-            instructions.setForeground(Color.BLACK);
-        }
+        setDarkMode();
     }
     //constructors
     public InstructionsWindow() {
@@ -111,27 +91,7 @@ public class InstructionsWindow extends javax.swing.JFrame {
 
         instructions.setBackground(Color.BLACK);
         TitleLabel.setBackground(Color.BLACK);
-        if(MineSweeper.isDarkMode()){
-            Back.setBackground(Color.BLACK);
-            Back.setForeground(Color.WHITE);
-            DMToggleButton.setBackground(Color.BLACK);
-            DMToggleButton.setForeground(Color.WHITE);
-            instructions.setOpaque(true);
-            TitleLabel.setOpaque(true);
-            TitleLabel.setForeground(Color.GREEN);
-            instructions.setForeground(Color.WHITE);
-        }else{
-            Back.setBackground(null);
-            Back.setIcon(DefaultButtonIcon);
-            Back.setForeground(Color.BLACK);
-            DMToggleButton.setBackground(null);
-            DMToggleButton.setIcon(DefaultButtonIcon);
-            DMToggleButton.setForeground(Color.BLACK);
-            instructions.setOpaque(false);
-            TitleLabel.setOpaque(false);
-            TitleLabel.setForeground(PURPLE);
-            instructions.setForeground(Color.BLACK);
-        }
+        setDarkMode();
 
         setIconImage(MineSweeper.MineIcon);
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -164,5 +124,28 @@ public class InstructionsWindow extends javax.swing.JFrame {
 
         pack();//<-- when you are all done adding stuff you pack() it, making sure everything is laid out as you put it on the screen.
         getContentPane().setVisible(true);//<-- and then you make it visible
+    }
+    private void setDarkMode(){
+        if(MineSweeper.isDarkMode()){
+            Back.setBackground(Color.BLACK);
+            Back.setForeground(Color.WHITE);
+            DMToggleButton.setBackground(Color.BLACK);
+            DMToggleButton.setForeground(Color.WHITE);
+            instructions.setOpaque(true);
+            TitleLabel.setOpaque(true);
+            TitleLabel.setForeground(Color.GREEN);
+            instructions.setForeground(Color.WHITE);
+        }else{
+            Back.setBackground(null);
+            Back.setIcon(DefaultButtonIcon);
+            Back.setForeground(Color.BLACK);
+            DMToggleButton.setBackground(null);
+            DMToggleButton.setIcon(DefaultButtonIcon);
+            DMToggleButton.setForeground(Color.BLACK);
+            instructions.setOpaque(false);
+            TitleLabel.setOpaque(false);
+            TitleLabel.setForeground(PURPLE);
+            instructions.setForeground(Color.BLACK);
+        }
     }
 }
