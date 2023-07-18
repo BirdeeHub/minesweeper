@@ -30,11 +30,11 @@ class MineSweeper {
             if(frame instanceof MainGameWindow){//<-- check if it is a specific type you can cast it as the correct window
                 ((MainGameWindow)frame).toggleDarkMode();//<-- cast as correct window, and run the function from that instance of the class.
             }else if(frame instanceof InstructionsWindow){
-                //((InstructionsWindow)frame).toggleDarkMode();
+                ((InstructionsWindow)frame).toggleDarkMode();
             }else if(frame instanceof OpeningWindow){
-                //((OpeningWindow)frame).toggleDarkMode();
+                ((OpeningWindow)frame).toggleDarkMode();
             }else if(frame instanceof ScoresWindow){
-                //((ScoresWindow)frame).toggleDarkMode();
+                ((ScoresWindow)frame).toggleDarkMode();
             }
         }
     }

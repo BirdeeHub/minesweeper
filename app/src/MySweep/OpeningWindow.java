@@ -67,6 +67,9 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
             OpeningWindow.this.dispose();
         }catch(NumberFormatException e){TitleLabel.setText("Invalid field(s)");}
     } 
+    void toggleDarkMode(){
+
+    }
     //---------------------------------initComponents()-----called by constructor-----------------------------------------------------------------
     private void initComponents() {//<-- a private function that doesnt return anything. It does stuff though.
         //--------------------------------------add action Listeners to components

@@ -26,7 +26,10 @@ public class InstructionsWindow extends javax.swing.JFrame {
     +"There is another method of interaction called a chord. If you use both mouse buttons when you click an already revealed numbered cell it clicks all surrounding squares but not an X mark, and if you marked too many it penalizes you for each extra mark by exploding a bomb each. However, this means it will reveal many more squares from just 1 action so it can be advantageous. It will explode question marks but not reveal if not a bomb.<br><br>"
     +"I have made a modification from the original ruleset in that you will always reveal a square with no adjacent bombs on your first click of the game instead of just requiring the cell itself to not be a bomb (unless your board size and #ofBombs prohibit this, in which case it will revert to the original ruleset).<br><br>"
     +"CTRL+SHIFT+Click on a score to delete it. Personal leaderboards will be saved in %userprofile%\\AppData\\Roaming\\minesweeperScores on windows, and ~/.minesweeper on linux or mac. If you alter the leaderboard manually and do not follow the format, scores will be unreadable by the program. format: x:y:bombCount:lives-livesLeft-time Additionally, if Leaderboard.txt is deleted or moved your scores can't be read until you move it back, but a new Leaderboard.txt file will be created to record future games.</html>";
-    
+
+    void toggleDarkMode(){
+
+    }
     //constructors
     public InstructionsWindow() {
         initComponents();

@@ -118,6 +118,9 @@ public class ScoresWindow extends JFrame {
         this.ParentFrame=ParentFrame;//<-- we need this to close it later if new board is chosen
         initComponents();
     }
+    void toggleDarkMode(){
+
+    }
     private void initComponents() {//-----------------------------------initComponents()------------------------------------------
         clickableToggle.setUI(new MetalToggleButtonUI() {//<-- allows me to change the color of a toggle button that is selected
             @Override
