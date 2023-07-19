@@ -1,4 +1,5 @@
 package MySweep;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JFrame;
@@ -11,6 +12,7 @@ import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -38,6 +40,9 @@ public class ScoresWindow extends JFrame {
     private boolean isControlDown;
     private boolean isShiftDown;
     private boolean isDeleteMode;//<-- controls toggle button background color WHILE SELECTED (see constructor)
+    private final Color PURPLE = new Color(58, 0, 82);
+    private final Color LIGHTPRPL = new Color(215, 196, 255);
+    private static final Icon DefaultButtonIcon = (new JButton()).getIcon();
     //-----------------------action listeners for leaderboardText(...). Yes, you can globally declare action listeners too------------------
     private ActionListener BoardButtonListener = new ActionListener(){
         public void actionPerformed(ActionEvent evt) {
@@ -119,7 +124,8 @@ public class ScoresWindow extends JFrame {
         initComponents();
     }
     void toggleDarkMode(){
-
+        repaint();
+        setDarkMode();
     }
     private void initComponents() {//-----------------------------------initComponents()------------------------------------------
         clickableToggle.setUI(new MetalToggleButtonUI() {//<-- allows me to change the color of a toggle button that is selected
@@ -132,11 +138,32 @@ public class ScoresWindow extends JFrame {
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE); 
         getContentPane().setPreferredSize(new Dimension(defaultwindowsize));
         setIconImage(MineSweeper.MineIcon);
-        JPanel containerGridBag = new JPanel(new GridBagLayout());
+        JPanel containerGridBag = new JPanel(new GridBagLayout()){
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor((MineSweeper.isDarkMode())?PURPLE:LIGHTPRPL);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        JPanel HeadingPanel = new JPanel(new GridBagLayout()){
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor((MineSweeper.isDarkMode())?PURPLE:LIGHTPRPL);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
+        JPanel ScoresPanel = new JPanel(new GridBagLayout()){
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor((MineSweeper.isDarkMode())?PURPLE:LIGHTPRPL);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         GridBagConstraints containerConstraints = new GridBagConstraints();
-        JPanel HeadingPanel = new JPanel(new GridBagLayout());
         GridBagConstraints HeadingConstraints = new GridBagConstraints();
-        JPanel ScoresPanel = new JPanel(new GridBagLayout());
         GridBagConstraints ScoresConstraints = new GridBagConstraints();
         JScrollPane scrollPane = new JScrollPane(ScoresPanel);//<-- add just the scores panel to scroll pane to scroll without losing back and toggle button
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -238,15 +265,36 @@ public class ScoresWindow extends JFrame {
         ScoresConstraints.gridx = 4;
         ScoresPanel.add(ColumnHeadingLabel3, ScoresConstraints);
 
-        BoardPanel = new JPanel();                           //set up main scores display properties
+        BoardPanel = new JPanel(){
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor((MineSweeper.isDarkMode())?PURPLE:LIGHTPRPL);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };                           //set up main scores display properties
         BoardPanel.setLayout(new GridLayout(0, 1)); 
         JLabel BoardSpacer = new JLabel(" ");
         BoardSpacer.setBorder(new EmptyBorder(10, 10, 10, 10));
-        LivesPanel = new JPanel();
+        LivesPanel = new JPanel(){
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor((MineSweeper.isDarkMode())?PURPLE:LIGHTPRPL);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         LivesPanel.setLayout(new GridLayout(0, 1));//each one of these is going to be a column of the display after leaderboardText adds the entries
         JLabel BoardSpacer2 = new JLabel(" ");
         BoardSpacer2.setBorder(new EmptyBorder(10, 5, 10, 5));
-        TimePanel = new JPanel();
+        TimePanel = new JPanel(){
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor((MineSweeper.isDarkMode())?PURPLE:LIGHTPRPL);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         TimePanel.setLayout(new GridLayout(0, 1));
         leaderboardText(BoardPanel, LivesPanel, TimePanel, BoardButtonListener, keyAdapter);//set text for main scores display
         JLabel BoardSpacer3 = new JLabel(" ");
@@ -372,8 +420,14 @@ public class ScoresWindow extends JFrame {
                 }else{
                     BoardPanel.add(BoardLabel[i]);
                 }
-
             }
+        }
+    }
+    private void setDarkMode(){
+        if(MineSweeper.isDarkMode()){
+            getContentPane().setForeground(Color.WHITE);
+        }else{
+            getContentPane().setForeground(Color.BLACK);
         }
     }
 }

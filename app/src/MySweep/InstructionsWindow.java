@@ -7,12 +7,14 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingConstants;
 import javax.swing.WindowConstants;
 import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.metal.MetalToggleButtonUI;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.KeyEvent;
@@ -25,6 +27,8 @@ import javax.swing.JToggleButton;
 public class InstructionsWindow extends javax.swing.JFrame {
     //initialize variables
     private final Color PURPLE = new Color(58, 0, 82);
+    private final Color LIGHTPRPL = new Color(215, 196, 255);
+    private final Color GREEN = new Color(0, 255, 0);
     private final String InstructionsText = "<html>Begin by choosing numbers for width by height, then bombs, then lives. 25x25 42-60 bombs, 1-3 lives is a good starting point, but choose whatever you want. Keep in mind it takes a little bit to pull up the window if you choose something over 200x200. (CTRL+Scroll to zoom... fair warning, 200x200 is 40,000 cells so its gonna take you a while.)<br><br>"
     +"If you click a bomb, you lose a life, lose all your lives to lose the game. Click a cell to reveal if it is a bomb. If your cell is not a bomb, it will instead display how many bombs are in the 8 surrounding cells, and if there are none, it will fill out all bombless cells surrounding the cell you clicked until no cell marked with a zero is adjacent to another cell that could be marked with a zero.<br>"
     +"The goal is to reveal every cell that is not a bomb. You may mark cells that contain bombs by use of the mark bombs button, or by right-clicking a cell. You cannot interact with marked cells other than to unmark them so as to prevent accidental death. If you mark twice it will instead receive a question mark, which is similar but interacts differently with chords.<br><br>"
@@ -94,9 +98,17 @@ public class InstructionsWindow extends javax.swing.JFrame {
         setDarkMode();
 
         setIconImage(MineSweeper.MineIcon);
+        JPanel containerPanel = new JPanel(new GridBagLayout()){
+            @Override
+            public void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                g.setColor((MineSweeper.isDarkMode())?PURPLE:LIGHTPRPL);
+                g.fillRect(0, 0, getWidth(), getHeight());
+            }
+        };
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         getContentPane().setPreferredSize(new Dimension(650,530));
-        getContentPane().setLayout(new GridBagLayout());//<-- setLayout(GridBagLayout)
+        getContentPane().add(containerPanel);//<-- setLayout(GridBagLayout)
         GridBagConstraints containerConstraints = new GridBagConstraints();//<-- you create a constraints object
         
         containerConstraints.gridx = 0;//set some values for x and y and whatever of the constraints
@@ -104,23 +116,23 @@ public class InstructionsWindow extends javax.swing.JFrame {
         containerConstraints.gridwidth = 1;
         containerConstraints.gridheight = 1;
         containerConstraints.fill = GridBagConstraints.BOTH;
-        getContentPane().add(Back, containerConstraints);//<-- then add your component to the pane, but with containerConstraints as a 2nd argument
+        containerPanel.add(Back, containerConstraints);//<-- then add your component to the pane, but with containerConstraints as a 2nd argument
 
         containerConstraints.weightx = 1.0;
         containerConstraints.gridwidth = 1;
         containerConstraints.gridx = 1;
-        getContentPane().add(TitleLabel, containerConstraints);
+        containerPanel.add(TitleLabel, containerConstraints);
         containerConstraints.weightx = 0.0;
 
         containerConstraints.gridx = 2;
-        getContentPane().add(DMToggleButton, containerConstraints);
+        containerPanel.add(DMToggleButton, containerConstraints);
 
         containerConstraints.gridx = 0;
         containerConstraints.gridy = 1;
         containerConstraints.gridwidth =3;
         containerConstraints.weightx = 1.0;
         containerConstraints.weighty = 1.0;
-        getContentPane().add(instructions, containerConstraints);
+        containerPanel.add(instructions, containerConstraints);
 
         pack();//<-- when you are all done adding stuff you pack() it, making sure everything is laid out as you put it on the screen.
         getContentPane().setVisible(true);//<-- and then you make it visible
@@ -131,9 +143,7 @@ public class InstructionsWindow extends javax.swing.JFrame {
             Back.setForeground(Color.WHITE);
             DMToggleButton.setBackground(Color.BLACK);
             DMToggleButton.setForeground(Color.WHITE);
-            instructions.setOpaque(true);
-            TitleLabel.setOpaque(true);
-            TitleLabel.setForeground(Color.GREEN);
+            TitleLabel.setForeground(GREEN);
             instructions.setForeground(Color.WHITE);
         }else{
             Back.setBackground(null);
@@ -142,9 +152,7 @@ public class InstructionsWindow extends javax.swing.JFrame {
             DMToggleButton.setBackground(null);
             DMToggleButton.setIcon(DefaultButtonIcon);
             DMToggleButton.setForeground(Color.BLACK);
-            instructions.setOpaque(false);
-            TitleLabel.setOpaque(false);
-            TitleLabel.setForeground(PURPLE);
+            TitleLabel.setForeground(Color.BLACK);
             instructions.setForeground(Color.BLACK);
         }
     }
