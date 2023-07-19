@@ -279,7 +279,7 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
             HeightFieldLabel.setForeground(Color.WHITE);
             BombFieldLabel.setForeground(Color.WHITE);
             TitleLabel.setForeground(Color.GREEN);
-            AuthorLabel.setForeground(Color.WHITE);
+            AuthorLabel.setForeground(Color.GREEN);
         }else{
             Start.setBackground(null);
             Start.setIcon(DefaultButtonIcon);
