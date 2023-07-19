@@ -108,6 +108,7 @@ public class ScoresWindow extends JFrame {
         LivesPanel.removeAll();
         TimePanel.removeAll();
         leaderboardText();//<-- Update the text for main scores display
+        setDarkMode();
         revalidate();
     }
     //------------------------------------Constructor------------Constructor-------------Constructor---------------------------------
