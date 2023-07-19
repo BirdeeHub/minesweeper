@@ -93,8 +93,6 @@ public class InstructionsWindow extends javax.swing.JFrame {
         instructions.setBorder(new EmptyBorder(10, 10, 10, 10));
         instructions.setText(InstructionsText);
 
-        instructions.setBackground(Color.BLACK);
-        TitleLabel.setBackground(Color.BLACK);
         setDarkMode();
 
         setIconImage(MineSweeper.MineIcon);

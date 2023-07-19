@@ -124,7 +124,6 @@ public class ScoresWindow extends JFrame {
         initComponents();
     }
     void toggleDarkMode(){
-        repaint();
         setDarkMode();
     }
     private void initComponents() {//-----------------------------------initComponents()------------------------------------------
