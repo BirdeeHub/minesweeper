@@ -74,8 +74,9 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
             OpeningWindow.this.dispose();
         }catch(NumberFormatException e){TitleLabel.setText("Invalid field(s)");}
     } 
-    void toggleDarkMode(){
-        setDarkMode();
+    void toggleDarkMode(){//<-- MineSweeper.toggleDarkMode() calls this function
+        setDarkMode();//<-- and it calls this, which is defined at the end of the file
+        repaint();
     }
     //---------------------------------initComponents()-----called by constructor-----------------------------------------------------------------
     private void initComponents() {//<-- a private function that doesnt return anything. It does stuff though.
@@ -111,7 +112,7 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
                 });//<-- see?
             }
         });//<-- 2 of them!
-        KeyAdapter keyAdapter = new KeyAdapter() {//this one is not defined as an anonymous class. It is called keyAdapter and it is a KeyAdapter.
+        KeyAdapter keyAdapter = new KeyAdapter() {//<-- this one is not defined as an anonymous class. It is called keyAdapter and it is a KeyAdapter.
             public void keyPressed(KeyEvent evt) {
                 if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
                     Component CurrComp = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
@@ -154,13 +155,14 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
         setIconImage(MineSweeper.MineIcon);
 
         setDarkMode();
-        JPanel backgroundPanel = new JPanel(){
-            @Override
+        //You can actually use this syntax when you use 'new' to modify any class rather than just interfaces.
+        JPanel backgroundPanel = new JPanel(){//<-- new ClassConstructor(...){Your Stuff Here};
+            @Override//<-- use @Override to modify the original function of the class (works for extends as well!)
             public void paintComponent(Graphics g) {
                 super.paintComponent(g);
-                g.setColor((MineSweeper.isDarkMode())?PURPLE:LIGHTPRPL);
+                g.setColor((MineSweeper.isDarkMode())?PURPLE:LIGHTPRPL);//<-- this one makes our background a prettier color.
                 g.fillRect(0, 0, getWidth(), getHeight());
-            }
+            }//^unfortunately, I had to do this, because when using component.setBackground(color) the color gets inherited by child components if their background is null.
         };
 
         //--------------------------now to add our stuff to our content pane----------------
@@ -264,7 +266,7 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
         pack();
         getContentPane().setVisible(true);
     }
-    private void setDarkMode(){
+    private void setDarkMode(){//sets colors appropriately based on DarkMode
         if(MineSweeper.isDarkMode()){
             Start.setForeground(Color.WHITE);
             ScoreBoard.setForeground(Color.WHITE);
@@ -276,7 +278,7 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
             WidthFieldLabel.setForeground(Color.WHITE);
             HeightFieldLabel.setForeground(Color.WHITE);
             BombFieldLabel.setForeground(Color.WHITE);
-            TitleLabel.setForeground(Color.WHITE);
+            TitleLabel.setForeground(Color.GREEN);
             AuthorLabel.setForeground(Color.WHITE);
         }else{
             Start.setBackground(null);
@@ -295,6 +297,5 @@ public class OpeningWindow extends JFrame {//<-- its a JFrame
             TitleLabel.setForeground(Color.BLACK);
             AuthorLabel.setForeground(Color.BLACK);
         }
-        repaint();
     }
 }

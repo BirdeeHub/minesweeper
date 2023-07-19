@@ -28,7 +28,6 @@ public class InstructionsWindow extends javax.swing.JFrame {
     //initialize variables
     private final Color PURPLE = new Color(58, 0, 82);
     private final Color LIGHTPRPL = new Color(215, 196, 255);
-    private final Color GREEN = new Color(0, 255, 0);
     private final String InstructionsText = "<html>Begin by choosing numbers for width by height, then bombs, then lives. 25x25 42-60 bombs, 1-3 lives is a good starting point, but choose whatever you want. Keep in mind it takes a little bit to pull up the window if you choose something over 200x200. (CTRL+Scroll to zoom... fair warning, 200x200 is 40,000 cells so its gonna take you a while.)<br><br>"
     +"If you click a bomb, you lose a life, lose all your lives to lose the game. Click a cell to reveal if it is a bomb. If your cell is not a bomb, it will instead display how many bombs are in the 8 surrounding cells, and if there are none, it will fill out all bombless cells surrounding the cell you clicked until no cell marked with a zero is adjacent to another cell that could be marked with a zero.<br>"
     +"The goal is to reveal every cell that is not a bomb. You may mark cells that contain bombs by use of the mark bombs button, or by right-clicking a cell. You cannot interact with marked cells other than to unmark them so as to prevent accidental death. If you mark twice it will instead receive a question mark, which is similar but interacts differently with chords.<br><br>"
@@ -37,7 +36,7 @@ public class InstructionsWindow extends javax.swing.JFrame {
     +"CTRL+SHIFT+Click on a score to delete it. Personal leaderboards will be saved in %userprofile%\\AppData\\Roaming\\minesweeperScores on windows, and ~/.minesweeper on linux or mac. If you alter the leaderboard manually and do not follow the format, scores will be unreadable by the program. format: x:y:bombCount:lives-livesLeft-time Additionally, if Leaderboard.txt is deleted or moved your scores can't be read until you move it back, but a new Leaderboard.txt file will be created to record future games.</html>";
     private static final Icon DefaultButtonIcon = (new JButton()).getIcon();
     private JButton Back = new JButton("Back");
-    private JToggleButton DMToggleButton = new JToggleButton("<html>Dark<br>Mode</html>");
+    private JToggleButton DMToggleButton = new JToggleButton();
     private JLabel TitleLabel = new JLabel();
     private JLabel instructions = new JLabel();
     void toggleDarkMode(){
@@ -108,7 +107,7 @@ public class InstructionsWindow extends javax.swing.JFrame {
         getContentPane().setPreferredSize(new Dimension(650,530));
         getContentPane().add(containerPanel);//<-- setLayout(GridBagLayout)
         GridBagConstraints containerConstraints = new GridBagConstraints();//<-- you create a constraints object
-        
+
         containerConstraints.gridx = 0;//set some values for x and y and whatever of the constraints
         containerConstraints.gridy = 0;
         containerConstraints.gridwidth = 1;
@@ -141,7 +140,8 @@ public class InstructionsWindow extends javax.swing.JFrame {
             Back.setForeground(Color.WHITE);
             DMToggleButton.setBackground(Color.BLACK);
             DMToggleButton.setForeground(Color.WHITE);
-            TitleLabel.setForeground(GREEN);
+            DMToggleButton.setText("<html>Dark<br>Mode</html>");
+            TitleLabel.setForeground(Color.GREEN);
             instructions.setForeground(Color.WHITE);
         }else{
             Back.setBackground(null);
@@ -150,6 +150,7 @@ public class InstructionsWindow extends javax.swing.JFrame {
             DMToggleButton.setBackground(null);
             DMToggleButton.setIcon(DefaultButtonIcon);
             DMToggleButton.setForeground(Color.BLACK);
+            DMToggleButton.setText("<html>Light<br>Mode</html>");
             TitleLabel.setForeground(Color.BLACK);
             instructions.setForeground(Color.BLACK);
         }

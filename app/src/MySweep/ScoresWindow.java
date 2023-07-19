@@ -34,8 +34,10 @@ public class ScoresWindow extends JFrame {
     private JFrame ParentFrame;//we need this reference in case we have to close it
     private boolean FileIssue = false;//<-- used to stop it from becoming a button when you use the toggle button if file issue. Probably not needed anymore since I split stuff out into IO and Entry but I'd have to change stuff
     private final Dimension defaultwindowsize = new Dimension(280, 500);
-    private JPanel BoardPanel, LivesPanel, TimePanel;//these ones are globally initialized to allow leaderboardText(...) to be called anywhere in the file
-    private JLabel[] BoardLabel;//                                                              ^leaderboardText(...) defined at end of file.
+    private JLabel ColumnHeadingLabel1, ColumnHeadingLabel2, ColumnHeadingLabel3, TitleLabel;//these are initialized globally to allow toggle dark mode to access them.
+    private JButton Back;
+    private JPanel BoardPanel, LivesPanel, TimePanel;//these ones are globally initialized to allow leaderboardText() to be called anywhere in the file
+    private JLabel[] BoardLabel, LivesLabel, TimeLabel;//                                                              ^leaderboardText() defined at end of file.
     private JButton[] BoardButton;//<-- these are here so we can swap them without re-running set leaderboard text function
     private boolean isControlDown;
     private boolean isShiftDown;
@@ -105,7 +107,7 @@ public class ScoresWindow extends JFrame {
         BoardPanel.removeAll();//remove items in the GridLayout panels which are our columns because we are going to re-add from file.
         LivesPanel.removeAll();
         TimePanel.removeAll();
-        leaderboardText(BoardPanel, LivesPanel, TimePanel, BoardButtonListener, keyAdapter);//<-- Update the text for main scores display
+        leaderboardText();//<-- Update the text for main scores display
         revalidate();
     }
     //------------------------------------Constructor------------Constructor-------------Constructor---------------------------------
@@ -124,13 +126,156 @@ public class ScoresWindow extends JFrame {
         initComponents();
     }
     void toggleDarkMode(){
+        repaint();
         setDarkMode();
     }
-    private void initComponents() {//-----------------------------------initComponents()------------------------------------------
+    //---------------------------this is the function to set the buttons and labels for the scores in the window.---------------------------------------
+    //---------------------------leaderboardText()---------------leaderboardText()------------------leaderboardText()-------------leaderboardText()--------
+    //----------------------------------------------leaderboardText()-----------Reads files, creates components based on contents-----------------
+    private void leaderboardText(){
+        //creates components with info from string array recieved from scoresFileManager
+        String SHL="<u>"; //StartHighLight variable for easily changing tags
+        String EHL="</u>";//EndHighLight
+        String Shtml="<html>";
+        String Ehtml="</html>";
+        ScoreEntry[] entries = ScoresFileIO.readLeaderboard();//<-- read scores file to ScoreEntry array
+        if(entries==null){//<-- no file was present
+            FileIssue=true;
+            BoardLabel = new JLabel[1];
+            BoardButton = new JButton[1];
+            LivesLabel = new JLabel[1];
+            TimeLabel = new JLabel[1];
+            BoardLabel[0] = new JLabel("File");
+            BoardButton[0] = new JButton("File");
+            LivesLabel[0] = new JLabel("not");
+            TimeLabel[0] = new JLabel("found.");
+            BoardPanel.add(BoardLabel[0]);
+            LivesPanel.add(LivesLabel[0]);
+            TimePanel.add(TimeLabel[0]);
+        }else if(entries.length==0){//<-- file was present but empty
+            FileIssue=true;
+            BoardButton = new JButton[1];
+            BoardLabel = new JLabel[1];
+            LivesLabel = new JLabel[1];
+            TimeLabel = new JLabel[1];
+            BoardLabel[0] = new JLabel("File");
+            BoardButton[0] = new JButton("File");
+            LivesLabel[0] = new JLabel("is");
+            TimeLabel[0] = new JLabel("empty.");
+            BoardPanel.add(BoardLabel[0]);
+            LivesPanel.add(LivesLabel[0]);
+            TimePanel.add(TimeLabel[0]);
+        }else{//     <----------------------------- score file with entries was found
+            String[] BoardText = new String[entries.length];
+            String[] LivesText = new String[entries.length];
+            String[] TimeText = new String[entries.length];
+            BoardButton = new JButton[entries.length];
+            for(int c=0; c<entries.length; c++){//initialize board buttons
+                BoardButton[c] = new JButton();
+                BoardButton[c].putClientProperty("BoardTarget", "");//<-- we are about to overwrite this in a second anyway but if we dont initialize we might glitch our highlighting
+            }//Board String will be its own property so that we can change how it displays as we wish
+            for(int c=0; c<entries.length; c++){//<-- for entries returned from read
+                if(entries[c].isValid()){//Is it valid?
+                    String finalBoardDisplayString = entries[c].getX()+"x"+entries[c].getY()+" B:"+entries[c].getBombCount()+" L:"+entries[c].getLives();
+                    if(entries[c].equals(thisBoard)){//<-- This is us! add to start
+                        if(entries.length>1 && c!=0){
+                            for(int add=entries.length-1; add>0; add--){//<-- move all values up 1 first so we dont overwrite when we place at start
+                                BoardButton[add].putClientProperty("BoardTarget",BoardButton[add-1].getClientProperty("BoardTarget"));
+                                BoardButton[add].setText(BoardButton[add-1].getText());  //^^^^this is what not initializing it would glitch
+                                BoardText[add]=BoardText[add-1];                         //it would try to get a property that does not exist.
+                                LivesText[add]=LivesText[add-1];
+                                TimeText[add]=TimeText[add-1];
+                            }
+                        }//now place our board at start
+                        BoardButton[0].putClientProperty("BoardTarget", entries[c]);
+                        BoardButton[0].setText(Shtml+SHL+finalBoardDisplayString+EHL+Ehtml);
+                        BoardText[0] = Shtml+SHL+finalBoardDisplayString+EHL+Ehtml;
+                        LivesText[0] = Shtml+SHL+((entries[c].getRemainingLives()==0)?"DIED AT":entries[c].getRemainingLives())+EHL+Ehtml;
+                        TimeText[0] = Shtml+SHL+Long.toString(entries[c].getTime()/1000)+EHL+Ehtml;
+                    } else{//add scores that arent us to end
+                        BoardButton[c].putClientProperty("BoardTarget", entries[c]);
+                        BoardButton[c].setText(Shtml+finalBoardDisplayString+Ehtml);
+                        BoardText[c] = Shtml+finalBoardDisplayString+Ehtml;
+                        LivesText[c] = Shtml+((entries[c].getRemainingLives()==0)?"DIED AT":entries[c].getRemainingLives())+Ehtml;
+                        TimeText[c] = Shtml+Long.toString(entries[c].getTime()/1000)+Ehtml;
+                    }
+                } else {//invalid entry?
+                    BoardButton[c].putClientProperty("BoardTarget", new ScoreEntry());//<--assign an empty one in case we try to do isValid and it crashes somehow
+                    BoardButton[c].setText("entry");
+                    BoardText[c] = "entry";
+                    LivesText[c] = "is";
+                    TimeText[c] = "invalid";
+                }
+            }
+            BoardLabel = new JLabel[entries.length];//initialize all the labels and button properties
+            LivesLabel = new JLabel[entries.length];//that we didnt need to add during read.
+            TimeLabel = new JLabel[entries.length];
+            for(int i=0; i<entries.length; i++){
+                BoardButton[i].setMargin(new Insets(-1, 0, -1, 0));
+                BoardButton[i].setBorderPainted(false);
+                BoardButton[i].addActionListener(BoardButtonListener);
+                BoardButton[i].addKeyListener(keyAdapter);
+                BoardLabel[i] = new JLabel(BoardText[i]);
+                BoardLabel[i].setHorizontalAlignment(SwingConstants.CENTER);
+                LivesLabel[i] = new JLabel(LivesText[i]);
+                LivesLabel[i].setBorder(new EmptyBorder(0, 0, 0, 0));
+                TimeLabel[i] = new JLabel(TimeText[i]);
+                TimeLabel[i].setBorder(new EmptyBorder(0, 0, 0, 10));
+                LivesPanel.add(LivesLabel[i]);//<-- add LivesLabel[i] to panel
+                TimePanel.add(TimeLabel[i]);//<----  add TimeLabel[i] to panel
+                if(clickable){//<--    add correct board button/label to panel
+                    BoardPanel.add(BoardButton[i]);
+                }else{
+                    BoardPanel.add(BoardLabel[i]);
+                }
+            }
+        }
+    }
+    //----------------setDarkMode()----------setDarkMode()-----------------
+    private void setDarkMode(){
+        if(MineSweeper.isDarkMode()){
+            Back.setForeground(Color.WHITE);
+            Back.setBackground(Color.BLACK);
+            clickableToggle.setForeground(Color.WHITE);
+            clickableToggle.setBackground(Color.BLACK);
+            ColumnHeadingLabel1.setForeground(Color.WHITE);
+            ColumnHeadingLabel2.setForeground(Color.WHITE);
+            ColumnHeadingLabel3.setForeground(Color.WHITE);
+            TitleLabel.setForeground(Color.GREEN);
+            for(int i=0;i<BoardLabel.length;i++){
+                BoardButton[i].setForeground(Color.WHITE);
+                BoardButton[i].setBackground(Color.BLACK);
+                BoardLabel[i].setForeground(Color.WHITE);
+                LivesLabel[i].setForeground(Color.WHITE);
+                TimeLabel[i].setForeground(Color.WHITE);
+            }
+        }else{
+            Back.setForeground(Color.BLACK);
+            Back.setBackground(null);
+            Back.setIcon(DefaultButtonIcon);
+            clickableToggle.setForeground(Color.BLACK);
+            clickableToggle.setBackground(null);
+            clickableToggle.setIcon(DefaultButtonIcon);
+            ColumnHeadingLabel1.setForeground(Color.BLACK);
+            ColumnHeadingLabel2.setForeground(Color.BLACK);
+            ColumnHeadingLabel3.setForeground(Color.BLACK);
+            TitleLabel.setForeground(Color.BLACK);
+            for(int i=0;i<BoardLabel.length;i++){
+                BoardButton[i].setForeground(Color.BLACK);
+                BoardButton[i].setBackground(null);
+                BoardButton[i].setIcon(DefaultButtonIcon);
+                BoardLabel[i].setForeground(Color.BLACK);
+                LivesLabel[i].setForeground(Color.BLACK);
+                TimeLabel[i].setForeground(Color.BLACK);
+            }
+        }
+    }
+    //------------------initComponents()-----------------------initComponents()---------------------------initComponents()------------------------
+    private void initComponents() {
         clickableToggle.setUI(new MetalToggleButtonUI() {//<-- allows me to change the color of a toggle button that is selected
             @Override
             protected Color getSelectColor() {
-                return (isDeleteMode)?Color.RED:super.getSelectColor();//<-- "super" allows us to refer to the class we extended
+                return (isDeleteMode)?Color.RED:((MineSweeper.isDarkMode())?PURPLE:super.getSelectColor());//<-- "super" allows us to refer to the class we extended
             }                                             // that way, if we override a function we can trigger the default functionality if we wish.
         });
         //------------------------------------------Initialize our nested gridbaglayout panels
@@ -167,6 +312,9 @@ public class ScoresWindow extends JFrame {
         JScrollPane scrollPane = new JScrollPane(ScoresPanel);//<-- add just the scores panel to scroll pane to scroll without losing back and toggle button
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getVerticalScrollBar().setBackground(PURPLE);
+        scrollPane.getHorizontalScrollBar().setBackground(PURPLE);
+        scrollPane.setBackground(PURPLE);
         getContentPane().add(containerGridBag);//<-- add panel to frame
 
         containerConstraints.fill = GridBagConstraints.BOTH;//add our HeadingPanel and scrollPane into the containerGridBag panel
@@ -185,11 +333,11 @@ public class ScoresWindow extends JFrame {
 
         //-----------------------------------------------Heading Panel----------------------------------------------------------
 
-        JLabel TitleLabel = new JLabel();              //initialize HeadingPanel items
+        TitleLabel = new JLabel();              //initialize HeadingPanel items
         TitleLabel.setFont(new Font("Tahoma", 0, 36));
         TitleLabel.setText("High Scores!");
         TitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        JButton Back = new JButton("Back");
+        Back = new JButton("Back");
         clickableToggle.addKeyListener(keyAdapter);
         Back.addKeyListener(keyAdapter);
         Back.addActionListener(new ActionListener(){
@@ -233,11 +381,11 @@ public class ScoresWindow extends JFrame {
 
         //-----------------------------------------------Scores Panel-------------------------------------------------
 
-        JLabel ColumnHeadingLabel1 = new JLabel("<html><u>Board:</u></html>");         //initialize row 1 of ScoresPanel
+        ColumnHeadingLabel1 = new JLabel("<html><u>Board:</u></html>");         //initialize row 1 of ScoresPanel
         JLabel ColumnHeadingSpacer = new JLabel(" ");
-        JLabel ColumnHeadingLabel2 = new JLabel("<html><u>Lives Left:</u></html>");    //scores panel lives heading
+        ColumnHeadingLabel2 = new JLabel("<html><u>Lives Left:</u></html>");    //scores panel lives heading
         JLabel ColumnHeadingSpacer2 = new JLabel(" ");
-        JLabel ColumnHeadingLabel3 = new JLabel("<html><u>time:</u></html>");          //scores panel time heading
+        ColumnHeadingLabel3 = new JLabel("<html><u>time:</u></html>");          //scores panel time heading
         ColumnHeadingLabel1.setBorder(new EmptyBorder(5, 10, 0, 0));
         ColumnHeadingSpacer.setBorder(new EmptyBorder(5, 10, 0, 10));
         ColumnHeadingLabel2.setBorder(new EmptyBorder(5, 0, 0, 0));
@@ -295,7 +443,7 @@ public class ScoresWindow extends JFrame {
             }
         };
         TimePanel.setLayout(new GridLayout(0, 1));
-        leaderboardText(BoardPanel, LivesPanel, TimePanel, BoardButtonListener, keyAdapter);//set text for main scores display
+        leaderboardText();//set text for main scores display
         JLabel BoardSpacer3 = new JLabel(" ");
 
         ScoresConstraints.fill = GridBagConstraints.BOTH;
@@ -317,116 +465,9 @@ public class ScoresWindow extends JFrame {
         ScoresConstraints.weighty = 1.0;
         ScoresPanel.add(BoardSpacer3, ScoresConstraints);
 
+        setDarkMode();
+
         pack();
         getContentPane().setVisible(true);
-    }
-    //---------------------------this is the function to set the buttons and labels for the scores in the window.---------------------------------------
-    //---------------------------leaderboardText()---------------leaderboardText()------------------leaderboardText()-------------leaderboardText()--------
-    //----------------------------------------------leaderboardText()-----------Reads files, creates components based on contents-----------------
-    private void leaderboardText(JPanel BoardPanel, JPanel LivesPanel, JPanel TimePanel, ActionListener BoardButtonListener, KeyAdapter keyAdapter){
-        //creates components with info from string array recieved from scoresFileManager
-        String SHL="<u>"; //StartHighLight variable for easily changing tags
-        String EHL="</u>";//EndHighLight
-        String Shtml="<html>";
-        String Ehtml="</html>";
-        ScoreEntry[] entries = ScoresFileIO.readLeaderboard();//<-- read scores file to ScoreEntry array
-        if(entries==null){//<-- no file was present
-            FileIssue=true;
-            BoardLabel = new JLabel[1];
-            BoardButton = new JButton[1];
-            JLabel[] LivesLabel = new JLabel[1];
-            JLabel[] TimeLabel = new JLabel[1];
-            BoardLabel[0] = new JLabel("File");
-            BoardButton[0] = new JButton("File");
-            LivesLabel[0] = new JLabel("not");
-            TimeLabel[0] = new JLabel("found.");
-            BoardPanel.add(BoardLabel[0]);
-            LivesPanel.add(LivesLabel[0]);
-            TimePanel.add(TimeLabel[0]);
-        }else if(entries.length==0){//<-- file was present but empty
-            FileIssue=true;
-            BoardButton = new JButton[1];
-            BoardLabel = new JLabel[1];
-            JLabel[] LivesLabel = new JLabel[1];
-            JLabel[] TimeLabel = new JLabel[1];
-            BoardLabel[0] = new JLabel("File");
-            BoardButton[0] = new JButton("File");
-            LivesLabel[0] = new JLabel("is");
-            TimeLabel[0] = new JLabel("empty.");
-            BoardPanel.add(BoardLabel[0]);
-            LivesPanel.add(LivesLabel[0]);
-            TimePanel.add(TimeLabel[0]);
-        }else{//     <----------------------------- score file with entries was found
-            String[] BoardText = new String[entries.length];
-            String[] LivesText = new String[entries.length];
-            String[] TimeText = new String[entries.length];
-            BoardButton = new JButton[entries.length];
-            for(int c=0; c<entries.length; c++){//initialize board buttons
-                BoardButton[c] = new JButton();
-                BoardButton[c].putClientProperty("BoardTarget", "");//<-- we are about to overwrite this in a second anyway but if we dont initialize we might glitch our highlighting
-            }//Board String will be its own property so that we can change how it displays as we wish
-            for(int c=0; c<entries.length; c++){//<-- for entries returned from read
-                if(entries[c].isValid()){//Is it valid?
-                    String finalBoardDisplayString = entries[c].getX()+"x"+entries[c].getY()+" B:"+entries[c].getBombCount()+" L:"+entries[c].getLives();
-                    if(entries[c].equals(thisBoard)){//<-- This is us! add to start
-                        if(entries.length>1 && c!=0){
-                            for(int add=entries.length-1; add>0; add--){//<-- move all values up 1 first so we dont overwrite when we place at start
-                                BoardButton[add].putClientProperty("BoardTarget",BoardButton[add-1].getClientProperty("BoardTarget"));
-                                BoardButton[add].setText(BoardButton[add-1].getText());  //^^^^this is what not initializing it would glitch
-                                BoardText[add]=BoardText[add-1];                         //it would try to get a property that does not exist.
-                                LivesText[add]=LivesText[add-1];
-                                TimeText[add]=TimeText[add-1];
-                            }
-                        }//now place our board at start
-                        BoardButton[0].putClientProperty("BoardTarget", entries[c]);
-                        BoardButton[0].setText(Shtml+SHL+finalBoardDisplayString+EHL+Ehtml);
-                        BoardText[0] = Shtml+SHL+finalBoardDisplayString+EHL+Ehtml;
-                        LivesText[0] = Shtml+SHL+((entries[c].getRemainingLives()==0)?"DIED AT":entries[c].getRemainingLives())+EHL+Ehtml;
-                        TimeText[0] = Shtml+SHL+Long.toString(entries[c].getTime()/1000)+EHL+Ehtml;
-                    } else{//add scores that arent us to end
-                        BoardButton[c].putClientProperty("BoardTarget", entries[c]);
-                        BoardButton[c].setText(Shtml+finalBoardDisplayString+Ehtml);
-                        BoardText[c] = Shtml+finalBoardDisplayString+Ehtml;
-                        LivesText[c] = Shtml+((entries[c].getRemainingLives()==0)?"DIED AT":entries[c].getRemainingLives())+Ehtml;
-                        TimeText[c] = Shtml+Long.toString(entries[c].getTime()/1000)+Ehtml;
-                    }
-                } else {//invalid entry?
-                    BoardButton[c].putClientProperty("BoardTarget", new ScoreEntry());//<--assign an empty one in case we try to do isValid and it crashes somehow
-                    BoardButton[c].setText("entry");
-                    BoardText[c] = "entry";
-                    LivesText[c] = "is";
-                    TimeText[c] = "invalid";
-                }
-            }
-            BoardLabel = new JLabel[entries.length];//initialize all the labels and button properties
-            JLabel[] LivesLabel = new JLabel[entries.length];//that we didnt need to add during read.
-            JLabel[] TimeLabel = new JLabel[entries.length];
-            for(int i=0; i<entries.length; i++){
-                BoardButton[i].setMargin(new Insets(-1, 0, -1, 0));
-                BoardButton[i].setBorderPainted(false);
-                BoardButton[i].addActionListener(BoardButtonListener);
-                BoardButton[i].addKeyListener(keyAdapter);
-                BoardLabel[i] = new JLabel(BoardText[i]);
-                BoardLabel[i].setHorizontalAlignment(SwingConstants.CENTER);
-                LivesLabel[i] = new JLabel(LivesText[i]);
-                LivesLabel[i].setBorder(new EmptyBorder(0, 0, 0, 0));
-                TimeLabel[i] = new JLabel(TimeText[i]);
-                TimeLabel[i].setBorder(new EmptyBorder(0, 0, 0, 10));
-                LivesPanel.add(LivesLabel[i]);//<-- add LivesLabel[i] to panel
-                TimePanel.add(TimeLabel[i]);//<----  add TimeLabel[i] to panel
-                if(clickable){//<--    add correct board button/label to panel
-                    BoardPanel.add(BoardButton[i]);
-                }else{
-                    BoardPanel.add(BoardLabel[i]);
-                }
-            }
-        }
-    }
-    private void setDarkMode(){
-        if(MineSweeper.isDarkMode()){
-            getContentPane().setForeground(Color.WHITE);
-        }else{
-            getContentPane().setForeground(Color.BLACK);
-        }
     }
 }
