@@ -108,7 +108,6 @@ public class ScoresWindow extends JFrame {
         LivesPanel.removeAll();
         TimePanel.removeAll();
         leaderboardText();//<-- Update the text for main scores display
-        setDarkMode();
         revalidate();
     }
     //------------------------------------Constructor------------Constructor-------------Constructor---------------------------------
@@ -231,6 +230,7 @@ public class ScoresWindow extends JFrame {
                 }
             }
         }
+        setDarkMode();
     }
     //----------------setDarkMode()----------setDarkMode()-----------------
     private void setDarkMode(){
@@ -444,8 +444,10 @@ public class ScoresWindow extends JFrame {
             }
         };
         TimePanel.setLayout(new GridLayout(0, 1));
-        leaderboardText();//set text for main scores display
         JLabel BoardSpacer3 = new JLabel(" ");
+
+        leaderboardText();//set text for main scores display
+
 
         ScoresConstraints.fill = GridBagConstraints.BOTH;
         ScoresConstraints.gridx = 0;
@@ -465,8 +467,6 @@ public class ScoresWindow extends JFrame {
         ScoresConstraints.gridx = GridBagConstraints.REMAINDER;
         ScoresConstraints.weighty = 1.0;
         ScoresPanel.add(BoardSpacer3, ScoresConstraints);
-
-        setDarkMode();
 
         pack();
         getContentPane().setVisible(true);
