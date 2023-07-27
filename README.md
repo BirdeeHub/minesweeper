@@ -19,6 +19,9 @@ Its just main, but without most of the comments from the tutorial, and some cosm
 | ![Screenshot](./Screenshots/Screenshot.png)         | ![Screenshot](./Screenshots/WinScreenshot.png)      |
 | ![Screenshot](./Screenshots/ScreenshotWithZoom.png) | ![Screenshot](./Screenshots/LossScreenshot.png)     |
 
+|                                                |                                               |                                               |
+|------------------------------------------------|-----------------------------------------------|-----------------------------------------------|
+| ![Screenshot](./Screenshots/OpeningWindow.png) | ![Screenshot](./Screenshots/ScoresScreen.png) | ![Screenshot](./Screenshots/Instructions.png) |
 ____________________________________________________________________________________
 ***Have fun!!!!!!!!!!***
 ************************************************************************************
