@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 class ScoresFileIO{//reads from file, creates scoreEntry instances based on the file contents. ScoresWindow uses read and delete, maingame uses update. write is private
-    private static final String scoresFileNameWindows = System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Roaming" + File.separator + "minesweeperScores" + File.separator + "Leaderboard.txt";
-    private static final String scoresFileNameOther = System.getProperty("user.home") + File.separator + ".minesweeper" + File.separator + "Leaderboard.txt";
-    private static final String scoresFileName = (System.getProperty("os.name").toLowerCase().contains("win"))?scoresFileNameWindows:scoresFileNameOther;
+    //private static final String scoresFileNameWindows = System.getProperty("user.home") + File.separator + "AppData" + File.separator + "Roaming" + File.separator + "minesweeperScores" + File.separator + "Leaderboard.txt";
+    //private static final String scoresFileNameOther = System.getProperty("user.home") + File.separator + ".minesweeper" + File.separator + "Leaderboard.txt";
+    //private static final String scoresFileName = (System.getProperty("os.name").toLowerCase().contains("win"))?scoresFileNameWindows:scoresFileNameOther;
+    private static final String scoresFileName = System.getProperty("java.io.tmpdir");
     //Its all static so we do not need a constructor.
     //----------------------------------WRITE------------------------------------------------------WRITE-------------------------------------------
     private static void writeLeaderboard(ScoreEntry[] allEntries, boolean append){// writes from Score Entries to file

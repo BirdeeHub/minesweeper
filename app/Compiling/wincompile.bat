@@ -1,11 +1,6 @@
 :these will be packaged with the application. If you edit the files in src, and you use this script, it will update the installed game.
 :if you mess up your game too much from editing, simply uninstall and reinstall from the installer. Your scores are saved elsewhere.
-IF EXIST "..\runtime\bin\javac.exe" (IF EXIST "..\runtime\bin\jar.exe" (
-..\..\runtime\javac.exe ..\src\MySweep\*.java -d ..\minesweeper_jar_in && cd ..\minesweeper_jar_in && ..\..\runtime\jar.exe -cvfe ..\minesweeper.jar MySweep.MineSweeper . ..\src ..\Compiling ..\Packaging ..\README.md && cd ..
+
+javac -cp .\examplepluginloader.jar ..\src\MySweep\*.java -d ..\minesweeper_jar_in && cd ..\minesweeper_jar_in && jar -cvfe ..\minesweeper.jar MySweep.MineSweeper . ..\src\MySweep\Icons && cd ..
 del /s /q .\minesweeper_jar_in\*
 rmdir /s /q .\minesweeper_jar_in\
-)) else (
-javac ..\src\MySweep\*.java -d ..\minesweeper_jar_in && cd ..\minesweeper_jar_in && jar -cvfe ..\minesweeper.jar MySweep.MineSweeper . ..\src ..\Compiling ..\Packaging ..\README.md && cd ..
-del /s /q .\minesweeper_jar_in\*
-rmdir /s /q .\minesweeper_jar_in\
-)

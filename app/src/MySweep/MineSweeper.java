@@ -4,13 +4,13 @@ import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import java.awt.EventQueue;
 import java.awt.Image;
-import java.io.FileInputStream;
-import java.nio.file.Paths;
+//import java.io.FileInputStream;
+//import java.nio.file.Paths;
 import java.awt.Frame;
 class MineSweeper {
-    public static final Image MineIcon = new ImageIcon(MineSweeper.class.getResource(((isJarFile())?"/src/MySweep/":"") + "Icons/MineSweeperIcon.png")).getImage();
-    public static final Image ExplosionIcon = new ImageIcon(MineSweeper.class.getResource(((isJarFile())?"/src/MySweep/":"") + "Icons/GameOverExplosion.png")).getImage();
-    private static boolean isJarFile() {//<-- apparently .jar files have a magic number that shows if it is a jar file.
+    public static final Image MineIcon = new ImageIcon(MineSweeper.class.getResource("/src/MySweep/Icons/MineSweeperIcon.png")).getImage();
+    public static final Image ExplosionIcon = new ImageIcon(MineSweeper.class.getResource("/src/MySweep/Icons/GameOverExplosion.png")).getImage();
+/*    private static boolean isJarFile() {//<-- apparently .jar files have a magic number that shows if it is a jar file.
         try (FileInputStream fileInputStream = new FileInputStream(Paths.get(System.getProperty("java.class.path")).toFile())) {
             byte[] magicNumber = new byte[4];
             int bytesRead = fileInputStream.read(magicNumber);
@@ -20,7 +20,7 @@ class MineSweeper {
         } catch (Exception e) {
             return false;
         }
-    }
+    }*/
     private static boolean DarkMode = true;//<-- we only set this in toggleDarkMode so it is private so we dont forget and mess that up somewhere
     public static boolean isDarkMode(){return DarkMode;}//<-- for other classes to get darkmode status using MineSweeper.isDarkMode()
     public static void toggleDarkMode() {//<-- the toggle button in InstructionsWindow calls this.

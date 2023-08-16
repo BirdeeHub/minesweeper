@@ -11,7 +11,7 @@ Mostly I just wanted to learn some Java.
 
 This version exists so I can change random stuff without messing with someones learn-to-code experience. 
 
-Its just main, but without most of the comments from the tutorial, and some cosmetic changes.
+Its just main, but my plugin loader project SHOULD be able to load it directly from github?
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 |                                                     |                                                     |
