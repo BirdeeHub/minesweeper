@@ -27,11 +27,7 @@ class MineSweeper {
             }
         }
     }
-
-    /** These are our possible command line arguments (all > 0)
-     * @param args [String <o or m>], int width, int height, int BombCount, int lives
-     */
-    public static void main(String[] args) {
+    public static void StartMineSweeperMain(String[] args){
         try {//(I found out that if you dont do this thing some Swing library stuff breaks on mac)
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         }catch (Exception e) {}
@@ -84,5 +80,11 @@ class MineSweeper {
         }else{
             EventQueue.invokeLater(new Runnable(){public void run(){new OpeningWindow().setVisible(true);}});
         }
+    }
+    /** These are our possible command line arguments (all > 0)
+     * @param args [String <o or m>], int width, int height, int BombCount, int lives
+     */
+    public static void main(String[] args) {
+        StartMineSweeperMain(args);
     }
 }

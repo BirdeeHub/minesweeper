@@ -6,10 +6,9 @@ import javax.swing.UIManager;
 
 public class PluginLoading implements MyPlugin {
     public void launchPlugin(MyAPI api){
-        try {//(I found out that if you dont do this thing some Swing library stuff breaks on mac)
-            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
-        }catch (Exception e) {}
-        EventQueue.invokeLater(new Runnable(){public void run(){new OpeningWindow().setVisible(true);}});
+        String[] args = new String[1];
+        args[0]="";
+        MineSweeper.StartMineSweeperMain(args);
     }
     public String getName() {
         return "minesweeper";
