@@ -11,7 +11,7 @@ Mostly I just wanted to learn some Java.
 
 This version exists so I can change random stuff without messing with someones learn-to-code experience. 
 
-Its just main, but my plugin loader project SHOULD be able to load it directly from github?
+Its just main, without all the comments, dark mode bugs fdixed, and my plugin loader project is able to load it directly from github?
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 |                                                     |                                                     |
