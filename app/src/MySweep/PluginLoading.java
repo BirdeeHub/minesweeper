@@ -6,11 +6,9 @@ import javax.swing.UIManager;
 
 public class PluginLoading implements MyPlugin {
     public void launchPlugin(MyAPI api){
-        String[] args = new String[1];
-        args[0]="";
-        MineSweeper.StartMineSweeperMain(args);
+        MineSweeper.StartMineSweeperMain(new String[]{""});
     }
     public String getName() {
-        return "minesweeper";
+        return this.getClass().getName()+" - "+this.getClass().getTypeName();
     }
 }
