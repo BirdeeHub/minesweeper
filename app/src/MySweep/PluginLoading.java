@@ -9,6 +9,6 @@ public class PluginLoading implements MyPlugin {
         MineSweeper.StartMineSweeperMain(new String[]{""});
     }
     public String getName() {
-        return this.getClass().getName()+" - "+this.getClass().getTypeName();
+        return "minesweeper";
     }
 }
