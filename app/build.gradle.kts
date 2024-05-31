@@ -34,3 +34,14 @@ application {
     // Define the main class for the application.
     mainClass = "MySweep.MineSweeper"
 }
+
+// tasks.jar {
+//     manifest { attributes( "Main-Class" to "MySweep.MineSweeper" ) }
+//     destinationDirectory.set(file("../"))
+//     archiveFileName.set("minesweeper.jar")
+// }
+
+// tasks.named<Test>("test") {
+//     // Use JUnit Platform for unit tests.
+//     useJUnitPlatform()
+// }
