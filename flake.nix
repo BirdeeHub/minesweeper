@@ -1,8 +1,10 @@
 {
   inputs = {
-    gradle2nix.url = "github:tadfisher/gradle2nix/v2";
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    gradle2nix.url = "github:tadfisher/gradle2nix/v2";
+    gradle2nix.inputs.nixpkgs.follows = "nixpkgs";
+    gradle2nix.inputs.flake-utils.follows = "flake-utils";
   };
 
   outputs = { self, ... }@inputs: let
