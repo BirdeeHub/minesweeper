@@ -113,6 +113,11 @@ public class MainGameWindow extends javax.swing.JFrame implements DarkModeToggle
             }//                                         ^ this is because each listener is associated with a particular button, and contains both methods
             @Override
             public void mousePressed(MouseEvent e) {
+                // It thinks double click is middle click
+                if(SwingUtilities.isMiddleMouseButton(e)) {
+                    currentButton = (JButton)e.getSource();
+                    grid.doClickType(currentButton, 2);//Chord
+                }
                 if(SwingUtilities.isLeftMouseButton(e)){
                     LMB = true;
                     if(currentButton==null){
