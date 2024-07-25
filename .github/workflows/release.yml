@@ -1,0 +1,190 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # This will run the workflow on every tag push with versioning format vX.X.X
+
+jobs:
+  build_linux_86:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: setup-java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '21'
+
+      - name: Build deb packages x86_64-linux
+        run: |
+          ./src/jar_it.sh package
+          mkdir -p ./outputs/dist
+          cp ./dist/minesweeper_1.0_amd64.deb ./outputs/dist/minesweeper_linux_64.deb
+
+      - name: Install Nix
+        uses: cachix/install-nix-action@v27
+        with:
+          github_access_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build app-images packages x86_64-linux
+        run: |
+          nix build .#app-images.x86_64-linux.default
+          mkdir -p ./outputs/app-images/
+          cp result ./outputs/app-images/minesweeper_linux_64.AppImage
+
+      - name: Build jar file
+        run: |
+          nix build .#packages.x86_64-linux.default
+          mkdir -p ./outputs/packages/
+          cp result/lib/minesweeper.jar ./outputs/packages/minesweeper.jar
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: outputs_linux_64
+          path: ./outputs
+
+  build_darwin_86:
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: setup-java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '21'
+
+      - name: Build dmg packages x86_64-macos
+        run: |
+          ./src/jar_it.sh package mac
+          mkdir -p ./outputs/dist
+          cp ./dist/minesweeper-1.0.dmg ./outputs/dist/minesweeper_mac_64.dmg
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: outputs_mac_64
+          path: ./outputs
+
+  build_win_86:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: setup-java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: '21'
+
+      - name: Build installer x86_64-windows
+        shell: cmd
+        env: 
+          JAVA_HOME: ${{ steps.setup-java.outputs.java-home }}
+        run: |
+          set PATH=%JAVA_HOME%\bin;%PATH%
+          cd .\src
+          .\jar_it.bat package
+          cd ..
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windist_64
+          path: ./dist
+
+  release:
+    needs: [build_linux_86, build_darwin_86, build_win_86]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: outputs_linux_64
+          path: ./outputs
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: windist_64
+          path: ./dist
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: outputs_mac_64
+          path: ./outputs
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASEPAT }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload jar file to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASEPAT }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./outputs/packages/minesweeper.jar
+          asset_name: minesweeper.jar
+          asset_content_type: application/octet-stream
+
+      - name: Upload x86_64-linux .deb to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASEPAT }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./outputs/dist/minesweeper_linux_64.deb
+          asset_name: minesweeper_linux_64.deb
+          asset_content_type: application/octet-stream
+
+      - name: Upload x86_64-windows .exe to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASEPAT }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./dist/Minesweeper-1.0.exe
+          asset_name: minesweeper_win_64.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload x86_64-darwin .dmg to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASEPAT }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./outputs/dist/minesweeper_mac_64.dmg
+          asset_name: minesweeper_mac_64.dmg
+          asset_content_type: application/octet-stream
+
+      - name: Upload x86_64-linux AppImage to release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASEPAT }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./outputs/app-images/minesweeper_linux_64.AppImage
+          asset_name: minesweeper_linux_64.AppImage
+          asset_content_type: application/octet-stream
