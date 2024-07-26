@@ -26,17 +26,21 @@ sudo apt install </path/to/minesweeper_linux_64.deb>`
 - via nix
 ```bash
 nix run github:BirdeeHub/minesweeper
+nix shell github:BirdeeHub/minesweeper
 # and
 nix repl
 :lf github:BirdeeHub/minesweeper
 # in order to see the things output by the flake
+# for including in your system flake.
 ```
-- Or download the .jar and run with
+- Or on any platform, download java and the .jar and run with
 ```bash
 java -jar minesweeper.jar
 ```
 
 ## Build
+
+Install java to path or set JAVA_HOME
 
 - Linux or mac:
 ```bash
