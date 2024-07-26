@@ -26,8 +26,8 @@ jobs:
           cp ./dist/minesweeper_1.0_amd64.deb ./outputs/dist/minesweeper_linux_64.deb
 
       - name: Install Nix # This is pretty unnecessary after removing the app image output but Im keeping it
-        uses: cachix/install-nix-action@v27
-        with:
+        uses: cachix/install-nix-action@v27 # It honestly really made me laugh when I saw "Install Nix" "Build jar file" in the list XD
+        with: # and even with that, the windows one can take longer still XD
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build jar file

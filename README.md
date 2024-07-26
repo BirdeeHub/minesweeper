@@ -69,12 +69,16 @@ Otherwise it will only create a .jar at `./lib`
 
 This repository is a repackaging of [the original repo](https://github.com/BirdeeHub/make_minesweeper_tutorial) which I turned into a coding tutorial.
 
-In that repo I packaged it in such a way that includes the source in the jar, and a compiler in the windows packaging.
+Only read it if you want to see how I was after like, 4 months of learning to code. In other words, don't.
+
+The Jarred branch is kinda cool though. Highly inadvisable, but cool. Its saves its scores within its own jar. Yes even when you force quit.
+
+In that repo I also packaged it in such a way that includes the source in the jar, and a compiler in the windows packaging.
 
 It has a ton of comments and explanations, and has a bug as an exercise and the answer in another branch.
-
-That other branch also does some crazy stuff saving its scores within its own jar for fun.
 
 The two branches thus cannot be merged together, and diverged long ago, thus the .git file is very large.
 
 I wanted an actual distributable version that wouldnt take forever to clone and look at.
+
+I also wanted to learn how to use github actions.
