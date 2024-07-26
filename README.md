@@ -12,6 +12,8 @@ Minesweeper, except you can set the size of the grid, number of bombs and number
 
 ## Installation
 
+[Release builds](https://github.com/BirdeeHub/minesweeper/releases)
+
 - Download the .deb package for x86_64 debian based linux distributions, then run 
 ```bash
 sudo apt install </path/to/minesweeper_linux_64.deb>`
