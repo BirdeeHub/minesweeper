@@ -22,7 +22,6 @@
       };
       app-images = {
         default = nix-appimage.bundlers.${system}.default pkgs.${APPNAME};
-        minesweeper = nix-appimage.bundlers.${system}.default pkgs.${APPNAME};
       };
       devShells = with pkgs; {
         default = mkShell {
