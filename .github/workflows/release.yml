@@ -25,16 +25,10 @@ jobs:
           mkdir -p ./outputs/dist
           cp ./dist/minesweeper_1.0_amd64.deb ./outputs/dist/minesweeper_linux_64.deb
 
-      - name: Install Nix
+      - name: Install Nix # This is pretty unnecessary after removing the app image output but Im keeping it
         uses: cachix/install-nix-action@v27
         with:
           github_access_token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build app-images packages x86_64-linux
-        run: |
-          nix build .#app-images.x86_64-linux.default
-          mkdir -p ./outputs/app-images/
-          cp result ./outputs/app-images/minesweeper_linux_64.AppImage
 
       - name: Build jar file
         run: |
@@ -177,14 +171,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./outputs/dist/minesweeper_mac_64.dmg
           asset_name: minesweeper_mac_64.dmg
-          asset_content_type: application/octet-stream
-
-      - name: Upload x86_64-linux AppImage to release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASEPAT }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./outputs/app-images/minesweeper_linux_64.AppImage
-          asset_name: minesweeper_linux_64.AppImage
           asset_content_type: application/octet-stream

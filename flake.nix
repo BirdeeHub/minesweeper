@@ -1,12 +1,22 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
-    flake-utils.url = "github:numtide/flake-utils";
-    nix-appimage.url = "github:ralismark/nix-appimage";
-    nix-appimage.inputs.flake-utils.follows = "flake-utils";
   };
-  outputs = { nixpkgs, nix-appimage, flake-utils, ... }@inputs: let
-    forEachSystem = flake-utils.lib.eachSystem inputs.nixpkgs.lib.platforms.all;
+  outputs = { nixpkgs, ... }@inputs: let
+    forEachSystem = (with builtins; systems: f: let
+        op = attrs: system: let
+          ret = f system;
+          op = attrs: key: attrs // {
+            ${key} = (attrs.${key} or { })
+            // { ${system} = ret.${key}; };
+          };
+        in foldl' op attrs (attrNames ret);
+      in foldl' op { }
+      (systems ++ (if builtins ? currentSystem then
+         if elem currentSystem systems then []
+         else [ currentSystem ] else []))
+    ) inputs.nixpkgs.lib.platforms.all;
+
     APPNAME = "minesweeper";
     appOverlay = self: _: {
       ${APPNAME} = self.callPackage ./. { inherit inputs APPNAME; inherit (self) system; };
@@ -19,9 +29,6 @@
     in{
       packages = {
         default = pkgs.${APPNAME};
-      };
-      app-images = {
-        default = nix-appimage.bundlers.${system}.default pkgs.${APPNAME};
       };
       devShells = with pkgs; {
         default = mkShell {

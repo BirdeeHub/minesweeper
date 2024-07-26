@@ -21,8 +21,6 @@ sudo apt install </path/to/minesweeper_linux_64.deb>`
 
 - Download the .exe installer package for x86_64 windows
 
-- Or download the AppImage and run it directly (x86_64 linux)
-
 - via nix
 ```bash
 nix run github:BirdeeHub/minesweeper
