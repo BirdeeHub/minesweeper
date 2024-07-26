@@ -30,6 +30,5 @@ symlinkJoin {
   paths = [ APPDRV DESKTOP ];
   meta = {
     mainProgram = APPNAME;
-    maintainers = [ lib.maintainers.birdee ];
   };
 }
