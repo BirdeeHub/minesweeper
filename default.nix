@@ -9,7 +9,7 @@
       export BASH_BIN=${bash}/bin/bash
       export RUNOUT=$out/bin
       export JAROUT=$out/lib
-      rm ./Icons/MineSweeperIcon.png
+      rm ./Icons/Minesweeper.ico
       echo '#!${bash}/bin/bash' > ./jar_it.sh
       cat ${./src/jar_it.sh} >> ./jar_it.sh
       exec ./jar_it.sh
