@@ -56,6 +56,8 @@ if argument 2 is mac, it will instead be a `.dmg` for mac
 
 You may set `$JAROUT` `$RUNOUT` to set location of the jar and run script.
 
+You may set `$DISTOUT` `$INSTALL_DIR` to set location of the installer, and the post-install path.
+
 - Windows:
 ```cmd
 git clone https://github.com/BirdeeHub/minesweeper && cd minesweeper
