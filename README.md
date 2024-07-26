@@ -25,7 +25,11 @@ sudo apt install </path/to/minesweeper_linux_64.deb>`
 
 - via nix
 ```bash
-nix run github:birdeeHub/minesweeper
+nix run github:BirdeeHub/minesweeper
+# and
+nix repl
+:lf github:BirdeeHub/minesweeper
+# in order to see the things output by the flake
 ```
 - Or download the .jar and run with
 ```bash
@@ -40,6 +44,8 @@ git clone https://github.com/BirdeeHub/minesweeper && cd minesweeper && \
 ./src/jar_it.sh
 ```
 
+It will create a .jar at `./lib` and a run script at `./bin`
+
 If argument 1 is package it will create a `.deb` package with jpackage at `./dist`
 
 if argument 2 is mac, it will instead be a `.dmg` for mac
@@ -52,6 +58,8 @@ git clone https://github.com/BirdeeHub/minesweeper && cd minesweeper
 cd .\src && .\jar_it.bat && cd ..
 ```
 If argument 1 is package it will create a .exe installer at `./dist`
+
+Otherwise it will only create a .jar at `./lib`
 
 ---
 
