@@ -14,8 +14,8 @@
     in foldl' op { } nixpkgs.lib.platforms.all;
 
     APPNAME = "minesweeper";
-    appOverlay = self: _: {
-      ${APPNAME} = self.callPackage ./. { inherit inputs APPNAME; inherit (self) system; };
+    appOverlay = final: _: {
+      ${APPNAME} = final.callPackage ./. { inherit inputs APPNAME; inherit (final) system; };
     };
 
   in {
