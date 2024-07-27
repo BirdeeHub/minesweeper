@@ -15,7 +15,7 @@
 
     APPNAME = "minesweeper";
     appOverlay = final: _: {
-      ${APPNAME} = final.callPackage ./. { inherit inputs APPNAME; inherit (final) system; };
+      ${APPNAME} = final.callPackage ./. { inherit APPNAME; };
     };
 
   in {
@@ -32,7 +32,8 @@
           packages = [ jdk ];
           DEVSHELL = 0;
           JAVA_HOME = "${jdk}";
-          shellHook = ''exec ${zsh}/bin/zsh'';
+          shellHook = ''
+          '';
         };
       };
     })

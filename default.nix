@@ -29,6 +29,13 @@
       EOFTAG
       runHook postInstall
     '';
+    meta = {
+      mainProgram = APPNAME;
+      description = "classic minesweeper where you can choose any size, number of bombs, or number of lives";
+      license = lib.licenses.mit;
+      homepage = "https://github.com/BirdeeHub/minesweeper";
+      maintainers = if lib.maintainers ? birdee then [ lib.maintainers.birdee ] else [];
+    };
   };
 in
 APPDRV
